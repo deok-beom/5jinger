@@ -3,7 +3,7 @@ package com.sparta.ojinger.security;
 import com.sparta.ojinger.exception.CustomException;
 import com.sparta.ojinger.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import com.sparta.ojinger.entitiy.User;
+import com.sparta.ojinger.entity.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
