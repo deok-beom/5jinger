@@ -2,7 +2,6 @@ package com.sparta.ojinger.dto;
 
 import com.sparta.ojinger.entity.ElevationStatus;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 

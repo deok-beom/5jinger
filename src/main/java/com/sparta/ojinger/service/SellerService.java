@@ -26,7 +26,7 @@ public class SellerService {
 
         for (Seller seller : sellers) {
             User user = seller.getUser();
-            SellerResponseDto responseDto = new SellerResponseDto(user.getUserId(), user.getUsername(),
+            SellerResponseDto responseDto = new SellerResponseDto(user.getId(), user.getUsername(),
                     user.getNickname(), user.getImage(), user.getSignUpDate(), seller.getIntro(), seller.getCategory());
             responseDtoList.add(responseDto);
         }

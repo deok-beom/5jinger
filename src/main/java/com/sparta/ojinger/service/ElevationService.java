@@ -25,7 +25,7 @@ public class ElevationService {
 
         for (Elevation elevation : elevations) {
             ElevationResponseDto responseDto = new ElevationResponseDto(elevation.getId(),
-                    elevation.getUser().getUserId(), elevation.getRequestDate(), elevation.getStatus());
+                    elevation.getUser().getId(), elevation.getRequestDate(), elevation.getStatus());
             responseDtoList.add(responseDto);
         }
 
