@@ -10,7 +10,7 @@ public class SellerResponseDto extends CustomerResponseDto {
 
     public SellerResponseDto(Long id, String username, String nickname, String image, LocalDateTime signUpDate, String intro, String category) {
         super(id, username, nickname, image, signUpDate);
-        super.role = UserRoleEnum.CUSTOMER;
+        super.role = UserRoleEnum.SELLER;
         this.intro = intro;
         this.category = category;
     }

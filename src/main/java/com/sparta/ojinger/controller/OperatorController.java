@@ -32,30 +32,30 @@ public class OperatorController {
     }
 
     @GetMapping("/sellers")
-    public List<SellerResponseDto> getAllSellers() {
-        return sellerService.getAllSellers();
+    public List<SellerResponseDto> getAllSellers(@PageableDefault(size = 5) Pageable pageable) {
+        return sellerService.getAllSellers(pageable);
     }
 
     @GetMapping("/sellers/elevations")
-    public List<ElevationResponseDto> getAllElevationRequests() {
-        return elevationService.getAllElevationRequests();
+    public List<ElevationResponseDto> getAllElevationRequests(@PageableDefault(size = 5) Pageable pageable) {
+        return elevationService.getAllElevationRequests(pageable);
     }
 
     @PostMapping("/sellers/{id}/elevations")
     public void approveElevationRequest(@PathVariable Long id) {
-        elevationService.updateElevationStatus(id, ElevationStatus.Approved);
+        elevationService.updateElevationStatus(id, ElevationStatus.APPROVED);
 
         User user = null;
         try {
             user = userService.updateCustomerRole(id, UserRoleEnum.SELLER);
         } catch (IllegalArgumentException | EntityNotFoundException e) {
-            elevationService.updateElevationStatus(id, ElevationStatus.Pending);
+            elevationService.updateElevationStatus(id, ElevationStatus.PENDING);
         }
 
         try {
             sellerService.createSeller(user);
         } catch (DuplicateKeyException e) {
-            elevationService.updateElevationStatus(id, ElevationStatus.Pending);
+            elevationService.updateElevationStatus(id, ElevationStatus.PENDING);
             userService.updateCustomerRole(id, UserRoleEnum.CUSTOMER);
         }
 
@@ -63,7 +63,7 @@ public class OperatorController {
 
     @PatchMapping("/sellers/{id}/elevations")
     public void rejectElevationRequest(@PathVariable Long id) {
-        elevationService.updateElevationStatus(id, ElevationStatus.Rejected);
+        elevationService.updateElevationStatus(id, ElevationStatus.REJECTED);
     }
 
     @PatchMapping("/seller/{id}/demotion")

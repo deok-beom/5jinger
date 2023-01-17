@@ -68,7 +68,7 @@ public class UserService {
         }
 
         User user = optionalUser.get();
-        if (!user.getRole().equals(UserRoleEnum.CUSTOMER)) {
+        if (user.getRole().equals(role) || user.getRole().equals(UserRoleEnum.ADMIN)) {
             throw new IllegalArgumentException();
         }
 
