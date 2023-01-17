@@ -19,6 +19,7 @@ public class Elevation {
     private User user;
 
     @Column
+    @Enumerated(EnumType.STRING)
     @Setter
     private ElevationStatus status;
 

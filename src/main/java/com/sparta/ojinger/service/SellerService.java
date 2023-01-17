@@ -6,6 +6,8 @@ import com.sparta.ojinger.entity.User;
 import com.sparta.ojinger.repository.SellerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,9 +22,9 @@ public class SellerService {
     private final SellerRepository sellerRepository;
 
     @Transactional(readOnly = true)
-    public List<SellerResponseDto> getAllSellers() {
+    public List<SellerResponseDto> getAllSellers(Pageable pageable) {
         List<SellerResponseDto> responseDtoList = new ArrayList<>();
-        List<Seller> sellers = sellerRepository.findAll();
+        Page<Seller> sellers = sellerRepository.findAll(pageable);
 
         for (Seller seller : sellers) {
             User user = seller.getUser();

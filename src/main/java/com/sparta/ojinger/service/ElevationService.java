@@ -5,6 +5,8 @@ import com.sparta.ojinger.entity.Elevation;
 import com.sparta.ojinger.entity.ElevationStatus;
 import com.sparta.ojinger.repository.ElevationRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,9 +21,9 @@ public class ElevationService {
     private final ElevationRepository elevationRepository;
 
     @Transactional(readOnly = true)
-    public List<ElevationResponseDto> getAllElevationRequests() {
+    public List<ElevationResponseDto> getAllElevationRequests(Pageable pageable) {
         List<ElevationResponseDto> responseDtoList = new ArrayList<>();
-        List<Elevation> elevations = elevationRepository.findAllByStatus(ElevationStatus.Pending);
+        Page<Elevation> elevations = elevationRepository.findAll(pageable);
 
         for (Elevation elevation : elevations) {
             ElevationResponseDto responseDto = new ElevationResponseDto(elevation.getId(),
@@ -34,7 +36,7 @@ public class ElevationService {
 
     @Transactional
     public void updateElevationStatus(Long userId, ElevationStatus status) {
-        Optional<Elevation> optionalElevation = elevationRepository.findByUser(userId);
+        Optional<Elevation> optionalElevation = elevationRepository.findByUserId(userId);
         if (optionalElevation.isEmpty()) {
             throw new EntityNotFoundException();
         }
