@@ -54,4 +54,13 @@ public class SellerService {
         Seller seller = optionalSeller.get();
         sellerRepository.delete(seller);
     }
+
+    public void setProfile(User user){
+        Optional<Seller> optionalSeller = sellerRepository.findByUser(user);
+        if (optionalSeller.isEmpty()) {
+            throw new EntityNotFoundException();
+        }
+
+        Seller seller = optionalSeller.get();
+    }
 }
