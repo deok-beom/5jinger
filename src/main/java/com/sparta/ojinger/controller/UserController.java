@@ -1,8 +1,8 @@
 package com.sparta.ojinger.controller;
 
 import com.sparta.ojinger.dto.UserDto;
-import com.sparta.ojinger.entitiy.User;
-import com.sparta.ojinger.entitiy.UserRoleEnum;
+import com.sparta.ojinger.entity.User;
+import com.sparta.ojinger.entity.UserRoleEnum;
 import com.sparta.ojinger.exception.CustomException;
 import com.sparta.ojinger.jwt.JwtUtil;
 import com.sparta.ojinger.repository.UserRepository;
@@ -49,7 +49,7 @@ public class UserController {
             throw new CustomException(DUPLICATE_USERNAME);
         });
 
-        UserRoleEnum role = UserRoleEnum.USER;
+        UserRoleEnum role = UserRoleEnum.CUSTOMER;
 
         if (signUpRequestDto.isAdmin()) {
             if (!signUpRequestDto.getAdminToken().equals(ADMIN_TOKEN)) {

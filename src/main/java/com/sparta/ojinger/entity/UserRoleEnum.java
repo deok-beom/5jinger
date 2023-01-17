@@ -1,7 +1,9 @@
-package com.sparta.ojinger.entitiy;
+package com.sparta.ojinger.entity;
 
 public enum UserRoleEnum {
-    USER(Authority.USER), ADMIN(Authority.ADMIN);
+    CUSTOMER(Authority.CUSTOMER),
+    SELLER(Authority.SELLER),
+    ADMIN(Authority.ADMIN);
 
     private final String authority;
 
@@ -14,7 +16,8 @@ public enum UserRoleEnum {
     }
 
     public static class Authority {
-        public static final String USER = "ROLE_USER";
+        public static final String CUSTOMER = "ROLE_CUSTOMER";
+        public static final String SELLER = "ROLE_SELLER";
         public static final String ADMIN = "ROLE_ADMIN";
     }
 }

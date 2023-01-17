@@ -1,6 +1,6 @@
 package com.sparta.ojinger.dto;
 
-import com.sparta.ojinger.entitiy.UserRoleEnum;
+import com.sparta.ojinger.entity.UserRoleEnum;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

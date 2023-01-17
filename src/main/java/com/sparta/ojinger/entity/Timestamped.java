@@ -1,4 +1,4 @@
-package com.sparta.ojinger.entitiy;
+package com.sparta.ojinger.entity;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;

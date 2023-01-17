@@ -1,6 +1,6 @@
 package com.sparta.ojinger.jwt;
 
-import com.sparta.ojinger.entitiy.UserRoleEnum;
+import com.sparta.ojinger.entity.UserRoleEnum;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

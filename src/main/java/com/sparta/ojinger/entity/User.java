@@ -1,10 +1,12 @@
-package com.sparta.ojinger.entitiy;
+package com.sparta.ojinger.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity(name = "Users")
 @NoArgsConstructor
@@ -23,10 +25,11 @@ public class User {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
+    @Setter
     private UserRoleEnum role;
 
     @Column(nullable = false)
-    private LocalDate registDate;
+    private LocalDateTime signUpDate;
 
     @Column(nullable = true)
     private String nickname;
@@ -39,9 +42,6 @@ public class User {
         this.username = username;
         this.password = password;
         this.role = role;
-        this.registDate = LocalDate.now();
+        this.signUpDate = LocalDateTime.now();
     }
-
-
-
 }

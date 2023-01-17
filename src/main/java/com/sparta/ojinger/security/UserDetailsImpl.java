@@ -1,7 +1,7 @@
 package com.sparta.ojinger.security;
 
 import com.sparta.ojinger.entitiy.User;
-import com.sparta.ojinger.entitiy.UserRoleEnum;
+import com.sparta.ojinger.entity.UserRoleEnum;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
