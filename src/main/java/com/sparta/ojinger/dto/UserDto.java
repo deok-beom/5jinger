@@ -14,9 +14,9 @@ public class UserDto {
         private String username;
         @Pattern(regexp = "[\\w0-9~!@#$%^&*()_+|<>?:{}]{8,15}", message = "최소 8자 이상, 15자 이하 알파벳 대소문자(a~z, A~Z), 숫자(0~9)를 혼합하여 입력해주세요.")
         private String password;
-        private boolean admin;
+        private boolean admin = false;
 
-        private String adminToken;
+        private String adminToken ="";
 
         public signUpRequestDto(String username, String password ){
             this.username = username;
@@ -30,10 +30,13 @@ public class UserDto {
 
         private String password;
 
+        private UserRoleEnum role;
 
-        public loginResponseDto(String username, String password){
+
+        public loginResponseDto(String username, String password, UserRoleEnum role){
             this.username = username;
             this.password = password;
+            this.role = role;
         }
     }
 }

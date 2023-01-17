@@ -4,8 +4,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-@Entity
+@Entity(name = "Users")
 @NoArgsConstructor
 @Getter
 public class User {
@@ -21,15 +23,26 @@ public class User {
     private String password;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private UserRoleEnum role;
 
     @Column(nullable = false)
+    private LocalDate registDate;
+
+    @Column(nullable = true)
     private String nickname;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String image;
 
-    @Column(nullable = false)
-    private String registDate;
+
+    public User(String username, String password, UserRoleEnum role){
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.registDate = LocalDate.now();
+    }
+
+
 
 }
