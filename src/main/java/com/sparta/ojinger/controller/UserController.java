@@ -13,11 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 import static com.sparta.ojinger.exception.ErrorCode.ADMIN_PASSWORD_NOT_FOUND;
@@ -62,5 +60,14 @@ public class UserController {
 
         userService.signUp(signUpRequestDto, role);
         return new ResponseEntity<>("회원가입에 성공하였습니다", HttpStatus.OK);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity login(@RequestParam String username, @RequestParam String password, HttpServletResponse response){
+
+        UserDto.loginResponseDto user = userService.login(username, password);
+
+        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getUsername(), user.getRole()));
+        return new ResponseEntity("로그인에 성공하였습니다.", HttpStatus.OK);
     }
 }
