@@ -1,5 +1,6 @@
 package com.sparta.ojinger.entity;
 
+import com.sparta.ojinger.dto.SellerProfileResponseDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,5 +26,13 @@ public class Seller {
 
     public Seller(User user) {
         this.user = user;
+    }
+
+    public void profileUpdate(SellerProfileResponseDto responseDto) {
+        this.intro = responseDto.getIntro();
+        this.category = responseDto.getCategory();
+        this.user.userChangeNicknameAndImage(responseDto.getNickname(),responseDto.getImage());
+
+
     }
 }

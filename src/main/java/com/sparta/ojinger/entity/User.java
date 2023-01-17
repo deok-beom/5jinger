@@ -43,4 +43,10 @@ public class User {
         this.role = role;
         this.signUpDate = LocalDateTime.now();
     }
+
+    public void userChangeNicknameAndImage(String nickname, String image){
+        this.nickname = nickname;
+        this.image = image;
+
+    }
 }
