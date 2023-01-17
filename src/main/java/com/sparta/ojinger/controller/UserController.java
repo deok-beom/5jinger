@@ -23,7 +23,7 @@ import static com.sparta.ojinger.exception.ErrorCode.DUPLICATE_USERNAME;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/user")
+@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
