@@ -68,7 +68,14 @@ public class SellerService {
         Seller seller = sellerRepository.findByUser(userDetails.getUser()).orElseThrow(
                 () -> new CustomException(USER_NOT_FOUND)
         );
-
         seller.profileUpdate(sellerProfileResponseDto);
+    }
+
+    @Transactional
+    public SellerProfileResponseDto getSellerProfile(UserDetailsImpl userDetails){
+        Seller seller = sellerRepository.findByUser(userDetails.getUser()).orElseThrow(
+                () -> new CustomException(USER_NOT_FOUND)
+        );
+        return new SellerProfileResponseDto(seller);
     }
 }

@@ -32,7 +32,5 @@ public class Seller {
         this.intro = responseDto.getIntro();
         this.category = responseDto.getCategory();
         this.user.userChangeNicknameAndImage(responseDto.getNickname(),responseDto.getImage());
-
-
     }
 }
