@@ -27,5 +27,4 @@ public class SellerController {
     public SellerProfileResponseDto getSellerProfile(@AuthenticationPrincipal UserDetailsImpl userDetails){
         return sellerService.getSellerProfile(userDetails);
     }
-
 }
