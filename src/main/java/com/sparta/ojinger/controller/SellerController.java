@@ -17,7 +17,7 @@ public class SellerController {
 
     private final SellerService sellerService;
 
-    @PostMapping("/profile")
+    @PatchMapping("/profile")
     public ResponseEntity setSellerProfile(@RequestBody SellerProfileResponseDto sellerProfileResponseDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         sellerService.setSellerProfile(sellerProfileResponseDto,userDetails);
         return new ResponseEntity<>("프로필 설정이 완료 되었습니다. ", HttpStatus.OK);
