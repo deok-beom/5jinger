@@ -24,6 +24,10 @@ public enum ErrorCode {
     USER_NOT_FOUND(NOT_FOUND,  "회원을 찾을 수 없습니다."),
     PASSWORD_NOT_FOUND(NOT_FOUND, "비밀번호가 일치하지 않습니다."),
     ADMIN_PASSWORD_NOT_FOUND(NOT_FOUND, "관리자 암호가 일치하지 않아 등록이 불가합니다."),
+    REQUEST_IS_EXIST(NOT_FOUND,"요청이 완료된 상태입니다."),
+    REQUEST_IS_NOT_EXIST(NOT_FOUND,"요청한 내역이 없습니다."),
+    PAGINATION_IS_NOT_EXIST(NOT_FOUND,"요청하신 페이지 내역이 존재하지 않습니다."),
+
 
 
     //409 CONFLICT 중복된 리소스

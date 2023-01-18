@@ -25,4 +25,14 @@ public class Elevation {
 
     @CreatedDate
     private LocalDateTime requestDate;
+
+    public void updateSatus(ElevationStatus status) {
+        this.status = status;
+    }
+
+    public Elevation(User user, ElevationStatus status) {
+        this.user = user;
+        this.status = status;
+        this.requestDate = LocalDateTime.now();
+    }
 }
