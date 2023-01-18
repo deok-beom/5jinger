@@ -1,5 +1,6 @@
 package com.sparta.ojinger.entity;
 
+import com.sparta.ojinger.dto.customer.CustomerProfileRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -36,6 +37,9 @@ public class User {
     @Column(nullable = true)
     private String image;
 
+    @Column(nullable = true)
+    private String catagory;
+
 
     public User(String username, String password, UserRoleEnum role){
         this.username = username;
@@ -44,9 +48,15 @@ public class User {
         this.signUpDate = LocalDateTime.now();
     }
 
+
+    public void updateUser(CustomerProfileRequestDto customerProfileRequestDto) {
+        this.nickname = customerProfileRequestDto.getNickName();
+        this.image = customerProfileRequestDto.getImage();
+    }
+
     public void userChangeNicknameAndImage(String nickname, String image){
         this.nickname = nickname;
         this.image = image;
-
     }
 }
+
