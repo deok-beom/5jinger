@@ -48,9 +48,15 @@ public class User {
         this.signUpDate = LocalDateTime.now();
     }
 
+
     public void updateUser(CustomerProfileRequestDto customerProfileRequestDto) {
         this.nickname = customerProfileRequestDto.getNickName();
         this.image = customerProfileRequestDto.getImage();
+    }
+
+    public void userChangeNicknameAndImage(String nickname, String image){
+        this.nickname = nickname;
+        this.image = image;
     }
 }
 

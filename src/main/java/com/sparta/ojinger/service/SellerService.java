@@ -1,9 +1,13 @@
 package com.sparta.ojinger.service;
 
+import com.sparta.ojinger.dto.SellerProfileResponseDto;
 import com.sparta.ojinger.dto.SellerResponseDto;
 import com.sparta.ojinger.entity.Seller;
 import com.sparta.ojinger.entity.User;
+import com.sparta.ojinger.exception.CustomException;
+import com.sparta.ojinger.exception.ErrorCode;
 import com.sparta.ojinger.repository.SellerRepository;
+import com.sparta.ojinger.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
@@ -15,6 +19,8 @@ import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.sparta.ojinger.exception.ErrorCode.USER_NOT_FOUND;
 
 @RequiredArgsConstructor
 @Service
@@ -55,5 +61,21 @@ public class SellerService {
 
         Seller seller = optionalSeller.get();
         sellerRepository.delete(seller);
+    }
+
+    @Transactional
+    public void setSellerProfile(SellerProfileResponseDto sellerProfileResponseDto, UserDetailsImpl userDetails){
+        Seller seller = sellerRepository.findByUser(userDetails.getUser()).orElseThrow(
+                () -> new CustomException(USER_NOT_FOUND)
+        );
+        seller.profileUpdate(sellerProfileResponseDto);
+    }
+
+    @Transactional
+    public SellerProfileResponseDto getSellerProfile(UserDetailsImpl userDetails){
+        Seller seller = sellerRepository.findByUser(userDetails.getUser()).orElseThrow(
+                () -> new CustomException(USER_NOT_FOUND)
+        );
+        return new SellerProfileResponseDto(seller);
     }
 }
