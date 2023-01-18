@@ -18,8 +18,8 @@ public class SellerController {
     private final SellerService sellerService;
 
     @PatchMapping("/profile")
-    public ResponseEntity setSellerProfile(@RequestBody SellerProfileResponseDto sellerProfileResponseDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        sellerService.setSellerProfile(sellerProfileResponseDto,userDetails);
+    public ResponseEntity updateSellerProfile(@RequestBody SellerProfileResponseDto sellerProfileResponseDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        sellerService.updateSellerProfile(sellerProfileResponseDto,userDetails);
         return new ResponseEntity<>("프로필 설정이 완료 되었습니다. ", HttpStatus.OK);
     }
 
