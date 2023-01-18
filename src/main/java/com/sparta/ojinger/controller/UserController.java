@@ -1,25 +1,16 @@
 package com.sparta.ojinger.controller;
 
 import com.sparta.ojinger.dto.UserDto;
-import com.sparta.ojinger.entity.User;
-import com.sparta.ojinger.entity.UserRoleEnum;
-import com.sparta.ojinger.exception.CustomException;
 import com.sparta.ojinger.jwt.JwtUtil;
-import com.sparta.ojinger.repository.UserRepository;
 import com.sparta.ojinger.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 
-import static com.sparta.ojinger.exception.ErrorCode.ADMIN_PASSWORD_NOT_FOUND;
-import static com.sparta.ojinger.exception.ErrorCode.DUPLICATE_USERNAME;
 
 @RestController
 @RequiredArgsConstructor
