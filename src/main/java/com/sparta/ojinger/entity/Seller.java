@@ -28,9 +28,9 @@ public class Seller {
         this.user = user;
     }
 
-    public void profileUpdate(SellerProfileResponseDto responseDto) {
-        this.intro = responseDto.getIntro();
-        this.category = responseDto.getCategory();
-        this.user.userChangeNicknameAndImage(responseDto.getNickname(),responseDto.getImage());
+    public void profileUpdate(String intro, String category, String nickname, String image) {
+        this.intro = intro;
+        this.category = category;
+        this.user.userChangeNicknameAndImage(nickname,image);
     }
 }

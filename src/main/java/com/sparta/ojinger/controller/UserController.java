@@ -27,12 +27,7 @@ import static com.sparta.ojinger.exception.ErrorCode.DUPLICATE_USERNAME;
 public class UserController {
 
     private final UserService userService;
-    private final UserRepository userRepository;
-
     private final JwtUtil jwtUtil;
-
-    @Value("${admin.token}")
-    private String ADMIN_TOKEN;
 
     @PostMapping("/signup")
     public ResponseEntity signUp(@RequestBody @Validated UserDto.signUpRequestDto signUpRequestDto, BindingResult bindingresult) {
@@ -43,22 +38,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bindingresult.getAllErrors().toString());
         }
 
-        //이미 존재한 user인지 확인
-        Optional<User> check_result = userRepository.findByUsername(signUpRequestDto.getUsername());
-        check_result.ifPresent(m -> {
-            throw new CustomException(DUPLICATE_USERNAME);
-        });
-
-        UserRoleEnum role = UserRoleEnum.CUSTOMER;
-
-        if (signUpRequestDto.isAdmin()) {
-            if (!signUpRequestDto.getAdminToken().equals(ADMIN_TOKEN)) {
-                throw new CustomException(ADMIN_PASSWORD_NOT_FOUND);
-            }
-            role = UserRoleEnum.ADMIN;
-        }
-
-        userService.signUp(signUpRequestDto, role);
+        userService.signUp(signUpRequestDto);
         return new ResponseEntity<>("회원가입에 성공하였습니다", HttpStatus.OK);
     }
 

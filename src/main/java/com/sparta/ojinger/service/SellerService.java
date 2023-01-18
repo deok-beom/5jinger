@@ -64,11 +64,11 @@ public class SellerService {
     }
 
     @Transactional
-    public void setSellerProfile(SellerProfileResponseDto sellerProfileResponseDto, UserDetailsImpl userDetails){
+    public void setSellerProfile(SellerProfileResponseDto responseDto, UserDetailsImpl userDetails){
         Seller seller = sellerRepository.findByUser(userDetails.getUser()).orElseThrow(
                 () -> new CustomException(USER_NOT_FOUND)
         );
-        seller.profileUpdate(sellerProfileResponseDto);
+        seller.profileUpdate(responseDto.getCategory(),responseDto.getNickname(),responseDto.getImage(),responseDto.getIntro());
     }
 
     @Transactional
