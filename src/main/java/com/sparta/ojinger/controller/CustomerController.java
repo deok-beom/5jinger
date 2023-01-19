@@ -25,7 +25,7 @@ import static com.sparta.ojinger.controller.PageConfig.pageableSetting;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/sellers")
+@RequestMapping("/customers")
 public class CustomerController {
 
     private final CustomerRequestRequestServiceImpl customerService;

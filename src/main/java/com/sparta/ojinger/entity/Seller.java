@@ -11,11 +11,10 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class Seller {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @MapsId
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
