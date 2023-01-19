@@ -34,6 +34,7 @@ public class CustomerRequest {
     private String sellerNickname;
 
     @Setter
+    @Enumerated(EnumType.STRING)
     private ProcessStatus status;
 
     @CreatedDate
