@@ -5,7 +5,6 @@ import com.sparta.ojinger.dto.SellerResponseDto;
 import com.sparta.ojinger.entity.Seller;
 import com.sparta.ojinger.entity.User;
 import com.sparta.ojinger.exception.CustomException;
-import com.sparta.ojinger.exception.ErrorCode;
 import com.sparta.ojinger.repository.SellerRepository;
 import com.sparta.ojinger.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -53,6 +52,7 @@ public class SellerService {
         sellerRepository.save(seller);
     }
 
+    @Transactional
     public void deleteSeller(User user) {
         Optional<Seller> optionalSeller = sellerRepository.findByUser(user);
         if (optionalSeller.isEmpty()) {

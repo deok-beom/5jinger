@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -48,6 +49,8 @@ public class SecurityConfig {
 
         http.authorizeRequests().antMatchers("/users/**").permitAll()
                 .antMatchers("/operators/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/sellers/items/**").hasRole("ADMIN")
+                .antMatchers("/sellers/**").hasRole("SELLER")
                 .anyRequest().authenticated()
                 // JWT 인증/인가를 사용하기 위한 설정
                 .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);

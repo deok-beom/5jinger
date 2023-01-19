@@ -46,7 +46,7 @@ public class OperatorController {
         return elevationRequestService.getAllElevationRequests(pageable);
     }
 
-    @PostMapping("/sellers/{id}/elevations")
+    @PostMapping("/elevations/{id}")
     public ResponseEntity approveElevationRequest(@PathVariable Long id) {
         elevationRequestService.updateElevationRequestStatus(id, ElevationStatus.APPROVED);
 
@@ -54,20 +54,19 @@ public class OperatorController {
         try {
             user = userService.updateCustomerRole(id, UserRoleEnum.SELLER);
         } catch (IllegalArgumentException e) {
+            elevationRequestService.updateElevationRequestStatus(id, ElevationStatus.PENDING);
             throw new CustomException(IMPROPER_ELEVATION);
         } catch (EntityNotFoundException e){
-            throw new CustomException(USER_NOT_FOUND);
-        } finally {
             elevationRequestService.updateElevationRequestStatus(id, ElevationStatus.PENDING);
+            throw new CustomException(USER_NOT_FOUND);
         }
 
         try {
             sellerService.createSeller(user);
         } catch (DuplicateKeyException e) {
-            throw new CustomException(DUPLICATE_SELLER);
-        } finally {
             elevationRequestService.updateElevationRequestStatus(id, ElevationStatus.PENDING);
             userService.updateCustomerRole(id, UserRoleEnum.CUSTOMER);
+            throw new CustomException(DUPLICATE_SELLER);
         }
 
         return new ResponseEntity<>("성공하였습니다.", HttpStatus.OK);
@@ -79,15 +78,14 @@ public class OperatorController {
     }
 
     @PatchMapping("/seller/{id}/demotion")
-    public void demoteSellerToCustomer(@PathVariable Long id) {
-        User user = userService.updateCustomerRole(id, UserRoleEnum.CUSTOMER);
+    public void demoteSellerToCustomer(@PathVariable Long userId) {
+        User user = userService.updateCustomerRole(userId, UserRoleEnum.CUSTOMER);
 
         try {
+            userService.updateCustomerRole(userId, UserRoleEnum.SELLER);
             sellerService.deleteSeller(user);
         } catch (DuplicateKeyException e) {
             throw new CustomException(ENTITY_NOT_FOUND);
-        } finally {
-            userService.updateCustomerRole(id, UserRoleEnum.SELLER);
         }
     }
 }

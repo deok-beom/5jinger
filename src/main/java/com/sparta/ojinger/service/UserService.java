@@ -61,6 +61,7 @@ public class UserService {
         return responseDtoList;
     }
 
+    @Transactional
     public User updateCustomerRole(Long userId, UserRoleEnum role) {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isEmpty()) {

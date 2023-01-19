@@ -39,12 +39,12 @@ public class SellerController {
 
     @PatchMapping("/items/{id}")
     public void updateItem(@RequestBody ItemRequestDto requestDto, @PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-
+        itemService.updateItem(requestDto, id, userDetails.getUser().getId());
     }
 
     @DeleteMapping("/items/{id}")
     public void deleteItem(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-
+        itemService.deleteItem(id, userDetails.getUser());
     }
 
 }
