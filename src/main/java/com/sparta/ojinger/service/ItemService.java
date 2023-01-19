@@ -40,7 +40,6 @@ public class ItemService {
         if (optionalItem.isEmpty()) {
             throw new CustomException(ErrorCode.ENTITY_NOT_FOUND);
         }
-
         Item item = optionalItem.get();
         return new ItemResponseDto(item);
     }
