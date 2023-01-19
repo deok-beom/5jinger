@@ -1,6 +1,7 @@
 package com.sparta.ojinger.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class Elevation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
