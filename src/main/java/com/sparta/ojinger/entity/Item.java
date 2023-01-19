@@ -7,6 +7,8 @@ import lombok.Setter;
 import javax.annotation.processing.Generated;
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -33,19 +35,32 @@ public class Item extends Timestamped {
     @Column(nullable = false)
     private Long price;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "seller_id")
+    private Seller seller;
+
+    @Setter
+    @Enumerated(EnumType.STRING)
+    private TradeStatus tradeStatus;
+
+    @OneToMany(mappedBy = "item", fetch = FetchType.LAZY)
+    private List<Category> categories;
 
     public Item(String title, String content, String category, Long price) {
         this.title = title;
         this.content = content;
         this.category = category;
         this.price = price;
+        this.tradeStatus = TradeStatus.ON_SALE;
+        this.categories = new ArrayList<>();
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void addCategory(List<Category> categories) {
+        CategoriesMethod.addCategories(this.categories, categories);
     }
 
+    public String getCategories() {
+        return CategoriesMethod.categoriesToString(this.categories);
+    }
 }

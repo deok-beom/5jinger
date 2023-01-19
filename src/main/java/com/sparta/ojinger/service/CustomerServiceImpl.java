@@ -6,7 +6,7 @@ import com.sparta.ojinger.entity.*;
 import com.sparta.ojinger.exception.CustomException;
 import com.sparta.ojinger.exception.ErrorCode;
 import com.sparta.ojinger.repository.CustomerRequestRepository;
-import com.sparta.ojinger.repository.ElevationRequestRepository;
+import com.sparta.ojinger.repository.PromotionRequestRepository;
 import com.sparta.ojinger.repository.SellerRepository;
 import com.sparta.ojinger.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,13 +28,13 @@ public class CustomerServiceImpl implements CustomerService {
     private final UserRepository userRepository;
     private final SellerRepository sellerRepository;
     private final CustomerRequestRepository customerRequestRepository;
-    private final ElevationRequestRepository elevationRequestRepository;
+    private final PromotionRequestRepository promotionRequestRepository;
 
     //프로필 설정
     @Transactional
     public void createProfile(CustomerProfileRequestDto customerProfileRequestDto, User user) {
         User customer = userRepository.findById(user.getId()).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
-        customer.updateUser(customerProfileRequestDto);
+        customer.updateUserProfile(customerProfileRequestDto.getNickName(), customerProfileRequestDto.getImage());
         userRepository.save(customer);
     }
 
@@ -97,7 +97,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     public void elevationsRequest(Long id) {
         User customer = userRepository.findById(id).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
-        Optional<ElevationRequest> optionalElevation = elevationRequestRepository.findByUserId(id);
+        Optional<PromotionRequest> optionalElevation = promotionRequestRepository.findByUserId(id);
         if(optionalElevation.isPresent()) {
             throw new CustomException(ErrorCode.REQUEST_IS_EXIST);
         }

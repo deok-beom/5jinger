@@ -3,6 +3,7 @@ package com.sparta.ojinger.service;
 import com.sparta.ojinger.dto.ItemRequestDto;
 import com.sparta.ojinger.dto.ItemResponseDto;
 import com.sparta.ojinger.entity.Item;
+import com.sparta.ojinger.entity.Seller;
 import com.sparta.ojinger.entity.User;
 import com.sparta.ojinger.entity.UserRoleEnum;
 import com.sparta.ojinger.repository.ItemRepository;
@@ -46,9 +47,9 @@ public class ItemService {
     }
 
     @Transactional
-    public void addItem(ItemRequestDto requestDto, User user) {
+    public void addItem(ItemRequestDto requestDto, Seller seller) {
         Item item = new Item(requestDto.getTitle(), requestDto.getCategory(), requestDto.getContent(), requestDto.getPrice());
-        item.setUser(user);
+        item.setSeller(seller);
         itemRepository.save(item);
     }
 
@@ -61,7 +62,7 @@ public class ItemService {
 
         Item item = optionalItem.get();
         // 얻어온 아이템이 현재 요청한 유저의 아이템인지 확인
-        if (item.getUser().getId() != userId) {
+        if (item.getSeller().getUser().getId() != userId) {
             throw new IllegalArgumentException();
         }
 
@@ -101,7 +102,7 @@ public class ItemService {
 
         Item item = optionalItem.get();
         // 삭제하려는 아이템을 등록한 사람이 요청한 사람 자기 자신이거나, 요청한 사람의 권한이 관리자라면 삭제를 수행
-        if (item.getUser().getId() == user.getId() || user.getRole().equals(UserRoleEnum.ADMIN)) {
+        if (item.getSeller().getUser().getId() == user.getId() || user.getRole().equals(UserRoleEnum.ADMIN)) {
             itemRepository.delete(item);
         } else {
             throw new IllegalArgumentException();

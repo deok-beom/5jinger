@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor
-public class ElevationRequest {
+public class PromotionRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -21,9 +21,9 @@ public class ElevationRequest {
     private User user;
 
     @Column
-    @Enumerated(EnumType.STRING)
     @Setter
-    private ElevationStatus status;
+    @Enumerated(EnumType.STRING)
+    private ProcessStatus status;
 
     @CreatedDate
     private LocalDateTime requestDate;

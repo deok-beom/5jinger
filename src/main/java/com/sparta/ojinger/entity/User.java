@@ -49,12 +49,7 @@ public class User {
     }
 
 
-    public void updateUser(CustomerProfileRequestDto customerProfileRequestDto) {
-        this.nickname = customerProfileRequestDto.getNickName();
-        this.image = customerProfileRequestDto.getImage();
-    }
-
-    public void userChangeNicknameAndImage(String nickname, String image){
+    public void updateUserProfile(String nickname, String image) {
         this.nickname = nickname;
         this.image = image;
     }

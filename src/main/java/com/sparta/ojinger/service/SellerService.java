@@ -1,7 +1,9 @@
 package com.sparta.ojinger.service;
 
+import com.sparta.ojinger.dto.SellerProfileRequestDto;
 import com.sparta.ojinger.dto.SellerProfileResponseDto;
 import com.sparta.ojinger.dto.SellerResponseDto;
+import com.sparta.ojinger.entity.Category;
 import com.sparta.ojinger.entity.Seller;
 import com.sparta.ojinger.entity.User;
 import com.sparta.ojinger.exception.CustomException;
@@ -25,6 +27,7 @@ import static com.sparta.ojinger.exception.ErrorCode.USER_NOT_FOUND;
 @Service
 public class SellerService {
     private final SellerRepository sellerRepository;
+    private final CategoryService categoryService;
 
     @Transactional(readOnly = true)
     public List<SellerResponseDto> getAllSellers(Pageable pageable) {
@@ -34,7 +37,7 @@ public class SellerService {
         for (Seller seller : sellers) {
             User user = seller.getUser();
             SellerResponseDto responseDto = new SellerResponseDto(user.getId(), user.getUsername(),
-                    user.getNickname(), user.getImage(), user.getSignUpDate(), seller.getIntro(), seller.getCategory());
+                    user.getNickname(), user.getImage(), user.getSignUpDate(), seller.getIntro(), seller.getCategoriesToString());
             responseDtoList.add(responseDto);
         }
 
@@ -48,7 +51,8 @@ public class SellerService {
             throw new DuplicateKeyException("이미 존재하는 판매자입니다.");
         }
 
-        Seller seller = new Seller(user);
+        Seller seller = new Seller();
+        seller.setUser(user);
         sellerRepository.save(seller);
     }
 
@@ -64,11 +68,13 @@ public class SellerService {
     }
 
     @Transactional
-    public void setSellerProfile(SellerProfileResponseDto sellerProfileResponseDto, UserDetailsImpl userDetails){
+    public void setSellerProfile(SellerProfileRequestDto requestDto, UserDetailsImpl userDetails){
         Seller seller = sellerRepository.findByUser(userDetails.getUser()).orElseThrow(
                 () -> new CustomException(USER_NOT_FOUND)
         );
-        seller.profileUpdate(sellerProfileResponseDto);
+        seller.updateProfile(requestDto.getIntro(), requestDto.getNickname(), requestDto.getImage());
+        List<Category> categories = categoryService.getCategoryFromString(requestDto.getCategory());
+        seller.addCategory(categories);
     }
 
     @Transactional
@@ -76,6 +82,16 @@ public class SellerService {
         Seller seller = sellerRepository.findByUser(userDetails.getUser()).orElseThrow(
                 () -> new CustomException(USER_NOT_FOUND)
         );
+
         return new SellerProfileResponseDto(seller);
+    }
+
+    @Transactional(readOnly = true)
+    public Seller getSellerById(Long id) {
+        Seller seller = sellerRepository.findByUserId(id).orElseThrow(
+                () -> new CustomException(USER_NOT_FOUND)
+        );
+
+        return seller;
     }
 }

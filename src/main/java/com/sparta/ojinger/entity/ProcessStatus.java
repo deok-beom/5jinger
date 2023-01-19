@@ -1,18 +1,14 @@
 package com.sparta.ojinger.entity;
 
-public enum ElevationStatus {
+public enum ProcessStatus {
     APPROVED(Status.APPROVED),
     REJECTED(Status.REJECTED),
     PENDING(Status.PENDING);
 
     private final String status;
 
-    ElevationStatus(String status) {
+    ProcessStatus(String status) {
         this.status = status;
-    }
-
-    public String getStatus() {
-        return this.status;
     }
 
     public static class Status {

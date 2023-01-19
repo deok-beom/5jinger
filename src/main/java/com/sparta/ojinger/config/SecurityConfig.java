@@ -49,7 +49,7 @@ public class SecurityConfig {
 
         http.authorizeRequests().antMatchers("/users/**").permitAll()
                 .antMatchers("/operators/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/sellers/items/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/sellers/items/**").hasAnyRole("ADMIN", "SELLER")
                 .antMatchers("/sellers/**").hasRole("SELLER")
                 .anyRequest().authenticated()
                 // JWT 인증/인가를 사용하기 위한 설정

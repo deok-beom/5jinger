@@ -16,6 +16,6 @@ public class SellerProfileResponseDto {
         this.nickname = seller.getUser().getNickname();
         this.image = seller.getUser().getImage();
         this.intro = seller.getIntro();
-        this.category = seller.getCategory();
+        this.category = seller.getCategoriesToString();
     }
 }
