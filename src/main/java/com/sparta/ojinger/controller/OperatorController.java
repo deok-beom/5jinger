@@ -43,18 +43,18 @@ public class OperatorController {
         return sellerService.getAllSellers(pageable);
     }
 
-    @GetMapping("/elevations")
-    public List<PromotionRequestResponseDto> getAllElevationRequests(@PageableDefault(size = 5) Pageable pageable) {
+    @GetMapping("/promotions")
+    public List<PromotionRequestResponseDto> getAllPromotionRequests(@PageableDefault(size = 5) Pageable pageable) {
         return promotionRequestService.getAllPromotionRequests(pageable);
     }
 
-    @PostMapping("/elevations/{id}")
+    @PostMapping("/promotions/{id}")
     public ResponseEntity approvePromotionRequest(@PathVariable Long id) {
         operatorService.promoteCustomerToSeller(id);
         return new ResponseEntity<>("등업 성공", HttpStatus.OK);
     }
 
-    @PatchMapping("/elevations/{id}")
+    @PatchMapping("/promotions/{id}")
     public void rejectPromotionRequest(@PathVariable Long id) {
         promotionRequestService.updatePromotionRequestStatus(id, ProcessStatus.REJECTED);
     }
