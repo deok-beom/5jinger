@@ -17,7 +17,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false)
@@ -36,10 +36,6 @@ public class User {
 
     @Column(nullable = true)
     private String image;
-
-    @Column(nullable = true)
-    private String catagory;
-
 
     public User(String username, String password, UserRoleEnum role){
         this.username = username;

@@ -23,24 +23,28 @@ public class CustomerRequest {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @Column(name = "seller_username", nullable = false)
-    private String sellerUsername;
+    @Column(name = "item_id", nullable = false)
+    private Long itemId;
 
-    private boolean status;
+    @Column(name = "seller_id", nullable = false)
+    private Long sellerId;
+
+    private ProcessStatus status;
 
     @CreatedDate
     private LocalDateTime requestDate;
 
 
-    public CustomerRequest(String username, String message,boolean status, User user) {
-        this.sellerUsername = username;
+    public CustomerRequest(Long itemId, String message, ProcessStatus status, Long userId, Long sellerId) {
+        this.itemId = itemId;
         this.message = message;
         this.status = status;
         this.requestDate = LocalDateTime.now();
-        this.userId = user.getId();
+        this.userId = userId;
+        this.sellerId = sellerId;
     }
 
-    public void updateCustomerRequestStatus(boolean status){
+    public void updateCustomerRequestStatus(ProcessStatus status) {
         this.status = status;
     }
 }

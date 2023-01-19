@@ -4,9 +4,14 @@ package com.sparta.ojinger.service;
 
 import com.sparta.ojinger.dto.CustomerResponseDto;
 import com.sparta.ojinger.dto.UserDto;
+import com.sparta.ojinger.dto.customer.CustomerProfileRequestDto;
+import com.sparta.ojinger.dto.customer.CustomerProfileResponseDto;
+import com.sparta.ojinger.entity.ProcessStatus;
+import com.sparta.ojinger.entity.PromotionRequest;
 import com.sparta.ojinger.entity.User;
 import com.sparta.ojinger.entity.UserRoleEnum;
 import com.sparta.ojinger.exception.CustomException;
+import com.sparta.ojinger.exception.ErrorCode;
 import com.sparta.ojinger.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,7 +39,6 @@ public class UserService {
 
     @Transactional
     public void signUp(UserDto.signUpRequestDto signUpDto) {
-
         String password = passwordEncoder.encode(signUpDto.getPassword());
         Optional<User> check_result = userRepository.findByUsername(signUpDto.getUsername());
         check_result.ifPresent(m -> {
@@ -90,5 +94,24 @@ public class UserService {
 
         user.setRole(role);
         return userRepository.save(user);
+    }
+
+    //프로필 설정
+    @Transactional
+    public void updateProfile(CustomerProfileRequestDto customerProfileRequestDto, User user) {
+        User customer = userRepository.findById(user.getId()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        customer.updateUserProfile(customerProfileRequestDto.getNickName(), customerProfileRequestDto.getImage());
+        userRepository.save(customer);
+    }
+
+    //프로필 조회
+    @Transactional
+    public CustomerProfileResponseDto lookUpProfile(User user) {
+        return new CustomerProfileResponseDto(getUserById(user.getId()));
+    }
+
+    @Transactional(readOnly = true)
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 }

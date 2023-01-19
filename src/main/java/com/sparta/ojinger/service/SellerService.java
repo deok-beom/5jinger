@@ -3,10 +3,13 @@ package com.sparta.ojinger.service;
 import com.sparta.ojinger.dto.SellerProfileRequestDto;
 import com.sparta.ojinger.dto.SellerProfileResponseDto;
 import com.sparta.ojinger.dto.SellerResponseDto;
+import com.sparta.ojinger.dto.customer.LookUpSellerResponseDto;
+import com.sparta.ojinger.dto.customer.LookUpSellersResponseDto;
 import com.sparta.ojinger.entity.Category;
 import com.sparta.ojinger.entity.Seller;
 import com.sparta.ojinger.entity.User;
 import com.sparta.ojinger.exception.CustomException;
+import com.sparta.ojinger.exception.ErrorCode;
 import com.sparta.ojinger.repository.SellerRepository;
 import com.sparta.ojinger.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -87,11 +90,33 @@ public class SellerService {
     }
 
     @Transactional(readOnly = true)
-    public Seller getSellerById(Long id) {
+    public Seller getSellerByUserId(Long id) {
         Seller seller = sellerRepository.findByUserId(id).orElseThrow(
                 () -> new CustomException(USER_NOT_FOUND)
         );
 
         return seller;
+    }
+
+    //판매자 리스트 조회
+    //판매자 리스트 조회
+    @Transactional
+    public List<LookUpSellersResponseDto> lookUpSellersList(Pageable pageable) {
+        Page<Seller> sellersPage = sellerRepository.findAll(pageable);
+        if (sellersPage.isEmpty()) {
+            throw new CustomException(ErrorCode.PAGINATION_IS_NOT_EXIST);
+        }
+        List<LookUpSellersResponseDto> lookUpSellersResponseDtoList = new ArrayList<>();
+        for (Seller seller : sellersPage) {
+            lookUpSellersResponseDtoList.add(new LookUpSellersResponseDto(seller));
+        }
+        return lookUpSellersResponseDtoList;
+    }
+
+    //판매자 조회
+    @Transactional
+    public LookUpSellerResponseDto lookUpSeller(Long id) {
+        Seller seller = sellerRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        return new LookUpSellerResponseDto(seller);
     }
 }

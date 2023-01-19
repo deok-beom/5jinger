@@ -61,7 +61,7 @@ public class OperatorController {
 
     @PatchMapping("/seller/{id}/demotion")
     public void demoteSellerToCustomer(@PathVariable Long id) {
-        Seller seller = sellerService.getSellerById(id);
+        Seller seller = sellerService.getSellerByUserId(id);
         User user = userService.updateCustomerRole(seller.getUser().getId(), UserRoleEnum.CUSTOMER);
 
         try {

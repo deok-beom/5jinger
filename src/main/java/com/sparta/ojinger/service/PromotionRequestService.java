@@ -3,6 +3,9 @@ package com.sparta.ojinger.service;
 import com.sparta.ojinger.dto.PromotionRequestResponseDto;
 import com.sparta.ojinger.entity.PromotionRequest;
 import com.sparta.ojinger.entity.ProcessStatus;
+import com.sparta.ojinger.entity.User;
+import com.sparta.ojinger.exception.CustomException;
+import com.sparta.ojinger.exception.ErrorCode;
 import com.sparta.ojinger.repository.PromotionRequestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,6 +22,17 @@ import java.util.Optional;
 @Service
 public class PromotionRequestService {
     private final PromotionRequestRepository promotionRequestRepository;
+
+    // 일반 고객 -> 판매자 등업 요청
+    @Transactional
+    public void requestPromotion(User customer) {
+        Optional<PromotionRequest> optionalElevation = promotionRequestRepository.findByUserId(customer.getId());
+        if (optionalElevation.isPresent()) {
+            throw new CustomException(ErrorCode.REQUEST_IS_EXIST);
+        }
+        PromotionRequest request = new PromotionRequest(customer, ProcessStatus.PENDING);
+        promotionRequestRepository.save(request);
+    }
 
     @Transactional(readOnly = true)
     public List<PromotionRequestResponseDto> getAllPromotionRequests(Pageable pageable) {

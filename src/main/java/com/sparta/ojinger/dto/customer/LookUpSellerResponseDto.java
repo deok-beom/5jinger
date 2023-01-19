@@ -22,7 +22,7 @@ public class LookUpSellerResponseDto {
         this.sellerId = seller.getId();
         this.usename = seller.getUser().getUsername();
         this.nickName = seller.getUser().getNickname();
-        this.category = seller.getCategory();
+        //this.category = seller.getCategory();
         this.role = seller.getUser().getRole();
     }
 }

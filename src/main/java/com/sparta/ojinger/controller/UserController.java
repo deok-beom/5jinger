@@ -1,11 +1,15 @@
 package com.sparta.ojinger.controller;
 
 import com.sparta.ojinger.dto.UserDto;
+import com.sparta.ojinger.dto.customer.CustomerProfileRequestDto;
+import com.sparta.ojinger.dto.customer.CustomerProfileResponseDto;
 import com.sparta.ojinger.jwt.JwtUtil;
+import com.sparta.ojinger.security.UserDetailsImpl;
 import com.sparta.ojinger.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -40,5 +44,18 @@ public class UserController {
 
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getUsername(), user.getRole()));
         return new ResponseEntity("로그인에 성공하였습니다.", HttpStatus.OK);
+    }
+
+    //프로필 설정
+    @PatchMapping("/profile")
+    public ResponseEntity<String> updateProfile(@RequestBody CustomerProfileRequestDto customerProfileRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        userService.updateProfile(customerProfileRequestDto, userDetails.getUser());
+        return new ResponseEntity<>("프로필 설정완료", HttpStatus.CREATED);
+    }
+
+    //프로필 조회
+    @GetMapping("/profile")
+    public ResponseEntity<CustomerProfileResponseDto> lookUpProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return new ResponseEntity<>(userService.lookUpProfile(userDetails.getUser()), HttpStatus.OK);
     }
 }

@@ -43,7 +43,7 @@ public class OperatorService {
 
     @Transactional
     public void demoteSellerToCustomer(Long sellerId) {
-        Seller seller = sellerService.getSellerById(sellerId);
+        Seller seller = sellerService.getSellerByUserId(sellerId);
         User user = userService.updateCustomerRole(seller.getUser().getId(), UserRoleEnum.CUSTOMER);
         sellerService.deleteSeller(user);
     }

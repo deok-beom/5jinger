@@ -26,7 +26,8 @@ public class ItemService {
         List<Item> items = itemRepository.findAll();
         List<ItemResponseDto> itemResponseDtoList = new ArrayList<>();
         for (Item item : items) {
-            ItemResponseDto itemResponseDto = new ItemResponseDto(item.getId(), item.getTitle(), item.getContent(),
+            ItemResponseDto itemResponseDto = new ItemResponseDto(item.getId(), item.getSeller().getId(),
+                    item.getSeller().getUser().getNickname(), item.getTitle(), item.getContent(),
                     item.getCategory(), item.getPrice(), item.getCreateAt(), item.getModifiedAt());
             itemResponseDtoList.add(itemResponseDto);
         }
@@ -42,7 +43,8 @@ public class ItemService {
         }
 
         Item item = optionalItem.get();
-        return new ItemResponseDto(item.getId(), item.getTitle(), item.getContent(),
+        return new ItemResponseDto(item.getId(), item.getSeller().getId(), item.getSeller().getUser().getNickname(),
+                item.getTitle(), item.getContent(),
                 item.getCategory(), item.getPrice(), item.getCreateAt(), item.getModifiedAt());
     }
 

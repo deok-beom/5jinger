@@ -1,6 +1,7 @@
 package com.sparta.ojinger.dto.customer;
 
 import com.sparta.ojinger.entity.CustomerRequest;
+import com.sparta.ojinger.entity.ProcessStatus;
 import lombok.Getter;
 
 @Getter
@@ -10,18 +11,18 @@ public class RequestCustomerResponseDto {
 
     private String sellerUsername;
 
-    private Long userId;
+    private Long customerId;
 
     private String message;
 
-    private boolean status;
+    private ProcessStatus status;
 
 
     public RequestCustomerResponseDto(CustomerRequest customerRequest) {
         this.requestId = customerRequest.getId();
-        this.sellerUsername = customerRequest.getSellerUsername();
-        this.userId = customerRequest.getUserId();
+        //this.sellerUsername = customerRequest.getSellerUsername();
+        this.customerId = customerRequest.getUserId();
         this.message = customerRequest.getMessage();
-        this.status = customerRequest.isStatus();
+        this.status = customerRequest.getStatus();
     }
 }

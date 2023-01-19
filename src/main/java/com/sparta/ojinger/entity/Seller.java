@@ -25,7 +25,7 @@ public class Seller {
     @Column(nullable = true)
     private String intro;
 
-    @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
     private List<Category> categories;
 
     public void updateProfile(String intro, String nickname, String image) {
@@ -37,7 +37,6 @@ public class Seller {
         this.user = user;
     }
 
-<<<<<<< HEAD
     public void addCategory(List<Category> categories) {
         for (Category category : categories) {
             this.categories.add(category);
@@ -48,16 +47,10 @@ public class Seller {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < this.categories.size(); i++) {
             sb.append(categories.get(i).getCategoryName());
-            if ( i != this.categories.size() - 1) {
+            if (i != this.categories.size() - 1) {
                 sb.append(", ");
             }
         }
         return sb.toString();
-=======
-    public void profileUpdate(String intro, String category, String nickname, String image) {
-        this.intro = intro;
-        this.category = category;
-        this.user.userChangeNicknameAndImage(nickname,image);
->>>>>>> 3034a0ebd0719d27199555929a4aedb469650625
     }
 }
