@@ -43,8 +43,17 @@ public class OperatorService {
 
     @Transactional
     public void demoteSellerToCustomer(Long sellerId) {
-        Seller seller = sellerService.getSellerByUserId(sellerId);
-        User user = userService.updateCustomerRole(seller.getUser().getId(), UserRoleEnum.CUSTOMER);
+        // ID를 이용해 사용자의 정보를 수정한다.
+        User user;
+        try {
+            user = userService.updateCustomerRole(sellerId, UserRoleEnum.CUSTOMER);
+        } catch (EntityNotFoundException e) {
+            throw new CustomException(USER_NOT_FOUND);
+        } catch (IllegalArgumentException e) {
+            throw new CustomException(IMPROPER_DEMOTION);
+        }
+
+        // 사용자의 판매자 정보를 삭제한다.
         sellerService.deleteSeller(user);
     }
 }

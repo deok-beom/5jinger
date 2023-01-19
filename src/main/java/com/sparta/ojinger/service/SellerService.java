@@ -1,6 +1,6 @@
 package com.sparta.ojinger.service;
 
-import com.sparta.ojinger.dto.SellerProfileResponseDto;
+import com.sparta.ojinger.dto.seller.SellerProfileResponseDto;
 import com.sparta.ojinger.dto.operator.SellerResponseDto;
 import com.sparta.ojinger.dto.seller.SellerProfileRequestDto;
 import com.sparta.ojinger.entity.Seller;
@@ -8,7 +8,6 @@ import com.sparta.ojinger.entity.User;
 import com.sparta.ojinger.exception.CustomException;
 import com.sparta.ojinger.exception.ErrorCode;
 import com.sparta.ojinger.repository.SellerRepository;
-import com.sparta.ojinger.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
@@ -47,7 +46,7 @@ public class SellerService {
 
     // 특정 판매자 조회
     @Transactional(readOnly = true)
-    public SellerProfileResponseDto getSellerById(Long id) {
+    public SellerProfileResponseDto getSellerProfileResponseDtoById(Long id) {
         Seller seller = sellerRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         return new SellerProfileResponseDto(seller);
     }
@@ -90,14 +89,19 @@ public class SellerService {
     }
 
     @Transactional
-    public void updateMySellerProfile(SellerProfileRequestDto requestDto, UserDetailsImpl userDetails){
-        Seller seller = getSellerByUserId(userDetails.getUser().getId());
-        userService.updateMyProfile(requestDto, userDetails.getUsername());
+    public void updateMySellerProfile(SellerProfileRequestDto requestDto, User user){
+        // 현재 사용자의 판매자 정보를 불러온다.
+        Seller seller = getSellerByUserId(user.getId());
 
+        // 닉네임, 이미지에 대한 업데이트를 수행한다.
+        userService.updateMyProfile(requestDto, user.getUsername());
+
+        // 소개(Intro) 정보가 공백이면 업데이트를 수행하지 않는다.
         if (!requestDto.getIntro().trim().equals("")) {
             seller.setIntro(requestDto.getIntro());
         }
 
+        // 카테고리(Category) 정보가 없으면 업데이트를 수행하지 않는다.
         if (!requestDto.getCategory().trim().equals("")) {
             // List<Category> categories = categoryService.getCategoryFromString(requestDto.getCategory());
             // seller.addCategory(categories);
@@ -105,8 +109,8 @@ public class SellerService {
     }
 
     @Transactional(readOnly = true)
-    public SellerProfileResponseDto getMySellerProfile(UserDetailsImpl userDetails){
-        Seller seller = getSellerByUserId(userDetails.getUser().getId());
+    public SellerProfileResponseDto getMySellerProfileResponseDto(Long userId){
+        Seller seller = getSellerByUserId(userId);
         return new SellerProfileResponseDto(seller);
     }
 

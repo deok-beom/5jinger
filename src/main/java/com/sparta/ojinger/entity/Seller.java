@@ -10,7 +10,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Seller {
+public class Seller extends Timestamped{
     @Id
     private Long id;
 
@@ -25,11 +25,6 @@ public class Seller {
 
     @OneToMany(fetch = FetchType.LAZY)
     private List<Category> categories;
-
-    public void updateProfile(String intro, String nickname, String image) {
-        this.intro = intro;
-        this.user.updateUserProfile(nickname, image);
-    }
 
     public void setUser(User user) {
         this.user = user;

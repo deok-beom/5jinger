@@ -48,6 +48,7 @@ public class SecurityConfig {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests().antMatchers("/users/signUp").permitAll()
+                .antMatchers("/items/**").permitAll()
                 .antMatchers("/users/logIn").permitAll()
                 .antMatchers("/operators/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/sellers/items/**").hasAnyRole("ADMIN", "SELLER")

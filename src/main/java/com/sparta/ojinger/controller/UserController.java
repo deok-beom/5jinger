@@ -1,8 +1,8 @@
 package com.sparta.ojinger.controller;
 
 import com.sparta.ojinger.dto.UserDto;
-import com.sparta.ojinger.dto.user.CustomerProfileRequestDto;
-import com.sparta.ojinger.dto.user.CustomerProfileResponseDto;
+import com.sparta.ojinger.dto.CustomerProfileRequestDto;
+import com.sparta.ojinger.dto.CustomerProfileResponseDto;
 import com.sparta.ojinger.jwt.JwtUtil;
 import com.sparta.ojinger.security.UserDetailsImpl;
 import com.sparta.ojinger.service.UserService;

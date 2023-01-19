@@ -3,7 +3,6 @@ package com.sparta.ojinger.controller;
 import com.sparta.ojinger.dto.ItemResponseDto;
 import com.sparta.ojinger.service.ItemService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

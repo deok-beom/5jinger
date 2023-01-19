@@ -1,4 +1,4 @@
-package com.sparta.ojinger.dto.user;
+package com.sparta.ojinger.dto;
 
 import com.sparta.ojinger.entity.Seller;
 import com.sparta.ojinger.entity.UserRoleEnum;
@@ -9,7 +9,7 @@ public class LookUpSellerResponseDto {
 
     private final Long sellerId;
 
-    private final String usename;
+    private final String username;
 
     private final String nickName;
 
@@ -19,7 +19,7 @@ public class LookUpSellerResponseDto {
 
     public LookUpSellerResponseDto(Seller seller) {
         this.sellerId = seller.getId();
-        this.usename = seller.getUser().getUsername();
+        this.username = seller.getUser().getUsername();
         this.nickName = seller.getUser().getNickname();
         //this.category = seller.getCategory();
         this.role = seller.getUser().getRole();

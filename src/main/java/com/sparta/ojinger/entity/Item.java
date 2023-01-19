@@ -14,7 +14,7 @@ import java.util.List;
 public class Item extends Timestamped {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Setter

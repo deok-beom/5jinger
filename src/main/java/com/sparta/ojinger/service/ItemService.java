@@ -1,6 +1,6 @@
 package com.sparta.ojinger.service;
 
-import com.sparta.ojinger.dto.ItemRequestDto;
+import com.sparta.ojinger.dto.seller.ItemRequestDto;
 import com.sparta.ojinger.dto.ItemResponseDto;
 import com.sparta.ojinger.entity.*;
 import com.sparta.ojinger.exception.CustomException;
@@ -12,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -56,27 +55,27 @@ public class ItemService {
     public void updateItem(ItemRequestDto requestDto, Long itemId, Long userId) {
         Item item = findItemAndValidUpdatable(itemId);
 
-        // 얻어온 아이템이 현재 요청한 유저의 아이템인지 확인
-        if (item.getSeller().getUser().getId() != userId) {
+        // 얻어온 아이템이 현재 요청한 유저의 아이템인지 확인한다.
+        if (item.getSeller().getId() != userId) {
             throw new CustomException(ErrorCode.INVALID_AUTH_TOKEN);
         }
 
-        // requestDto에 실려온 제목이 공백이 아니면 업데이트 해준다.
+        // 제목이 공백이 아니면 업데이트 해준다.
         if (!requestDto.getTitle().trim().equals("")) {
             item.setTitle(requestDto.getTitle());
         }
 
-        // requestDto에 실려온 내용이 공백이 아니면 업데이트 해준다.
+        // 내용이 공백이 아니면 업데이트 해준다.
         if (!requestDto.getContent().trim().equals("")) {
             item.setContent(requestDto.getContent());
         }
 
-        // requestDto에 실려온 카테고리가 공백이 아니면 업데이트 해준다.
+        // 카테고리가 공백이 아니면 업데이트 해준다.
         if (!requestDto.getCategory().trim().equals("")) {
             //item.setCategory(requestDto.getCategory());
         }
 
-        // requestDto에 실려온 가격이 공백이 아니면 업데이트 해준다.
+        // 가격이 0원이 아니면 업데이트 해준다.
         if (requestDto.getPrice() != 0) {
             item.setPrice(requestDto.getPrice());
         }
@@ -88,8 +87,8 @@ public class ItemService {
     public void suspendItem(Long itemId, User user) {
         Item item = findItemAndValidUpdatable(itemId);
 
-        // 삭제하려는 아이템을 등록한 사람이 요청한 사람 자기 자신이거나, 요청한 사람의 권한이 관리자라면 삭제를 수행
-        if (item.getSeller().getUser().getId() == user.getId() || user.getRole().equals(UserRoleEnum.ADMIN)) {
+        // 삭제하려는 아이템을 등록한 사람이 현재 사용자 자신이거나, 현재 사용자의 권한이 관리자라면 삭제를 수행한다.
+        if (item.getSeller().getId() == user.getId() || user.getRole().equals(UserRoleEnum.ADMIN)) {
             item.setStatus(TradeStatus.SUSPENSION);
         } else {
             throw new CustomException(ErrorCode.INVALID_AUTH_TOKEN);

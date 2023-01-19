@@ -1,4 +1,4 @@
-package com.sparta.ojinger.dto.user;
+package com.sparta.ojinger.dto;
 
 import lombok.Getter;
 

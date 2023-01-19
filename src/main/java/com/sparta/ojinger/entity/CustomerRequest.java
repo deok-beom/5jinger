@@ -30,6 +30,9 @@ public class CustomerRequest {
     @Column(name = "seller_id", nullable = false)
     private Long sellerId;
 
+    @Column
+    private String sellerNickname;
+
     @Setter
     private ProcessStatus status;
 
@@ -37,12 +40,13 @@ public class CustomerRequest {
     private LocalDateTime requestDate;
 
 
-    public CustomerRequest(Long itemId, String message, ProcessStatus status, Long userId, Long sellerId) {
+    public CustomerRequest(Long itemId, String message, ProcessStatus status, Long userId, Long sellerId, String sellerNickname) {
         this.itemId = itemId;
         this.message = message;
         this.status = status;
         this.requestDate = LocalDateTime.now();
         this.userId = userId;
         this.sellerId = sellerId;
+        this.sellerNickname = sellerNickname;
     }
 }

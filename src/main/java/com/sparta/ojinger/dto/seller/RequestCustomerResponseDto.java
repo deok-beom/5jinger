@@ -3,25 +3,26 @@ package com.sparta.ojinger.dto.seller;
 import com.sparta.ojinger.entity.CustomerRequest;
 import com.sparta.ojinger.entity.ProcessStatus;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public class RequestCustomerResponseDto {
 
-    private Long requestId;
+    private final Long requestId;
 
-    private String sellerUsername;
+    private final String sellerUsername;
 
-    private Long customerId;
+    private final Long customerId;
 
-    private String message;
+    private final String message;
 
-    private ProcessStatus status;
+    private final ProcessStatus status;
 
 
     public RequestCustomerResponseDto(CustomerRequest customerRequest) {
         this.requestId = customerRequest.getId();
-        //this.sellerUsername = customerRequest.getSellerUsername();
         this.customerId = customerRequest.getUserId();
+        this.sellerUsername = customerRequest.getSellerNickname();
         this.message = customerRequest.getMessage();
         this.status = customerRequest.getStatus();
     }

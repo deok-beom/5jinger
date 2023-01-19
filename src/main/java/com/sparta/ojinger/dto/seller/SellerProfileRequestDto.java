@@ -1,6 +1,6 @@
 package com.sparta.ojinger.dto.seller;
 
-import com.sparta.ojinger.dto.user.CustomerProfileRequestDto;
+import com.sparta.ojinger.dto.CustomerProfileRequestDto;
 import lombok.Getter;
 
 import java.util.Objects;

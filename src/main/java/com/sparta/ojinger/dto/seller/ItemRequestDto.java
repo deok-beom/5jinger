@@ -1,7 +1,6 @@
-package com.sparta.ojinger.dto;
+package com.sparta.ojinger.dto.seller;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 

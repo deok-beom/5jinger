@@ -3,8 +3,8 @@ package com.sparta.ojinger.service;
 
 import com.sparta.ojinger.dto.operator.CustomerResponseDto;
 import com.sparta.ojinger.dto.UserDto;
-import com.sparta.ojinger.dto.user.CustomerProfileRequestDto;
-import com.sparta.ojinger.dto.user.CustomerProfileResponseDto;
+import com.sparta.ojinger.dto.CustomerProfileRequestDto;
+import com.sparta.ojinger.dto.CustomerProfileResponseDto;
 import com.sparta.ojinger.entity.User;
 import com.sparta.ojinger.entity.UserRoleEnum;
 import com.sparta.ojinger.exception.CustomException;
@@ -64,7 +64,6 @@ public class UserService {
         return new UserDto.logInResponseDto(user.getUsername(), user.getPassword(), user.getRole());
     }
 
-    // 내 프로필 설정
     @Transactional
     public void updateMyProfile(CustomerProfileRequestDto requestDto, String username) {
         User user = getUserByName(username);
@@ -78,8 +77,6 @@ public class UserService {
         }
     }
 
-
-    // 내 프로필 조회
     @Transactional(readOnly = true)
     public CustomerProfileResponseDto getMyProfile(String username) {
         return new CustomerProfileResponseDto(getUserByName(username));
@@ -100,18 +97,20 @@ public class UserService {
 
     @Transactional
     public User updateCustomerRole(Long userId, UserRoleEnum role) {
+        // ID를 이용해 권한을 변경할 사용자 정보를 찾는다.
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isEmpty()) {
             throw new EntityNotFoundException();
         }
 
         User user = optionalUser.get();
+        // 권한을 변경할 사용자의 권한이 이미 변경하려는 권한과 같거나, 어드민인 건 아닌지 확인한다.
         if (user.getRole().equals(role) || user.getRole().equals(UserRoleEnum.ADMIN)) {
             throw new IllegalArgumentException();
         }
 
         user.setRole(role);
-        return userRepository.save(user);
+        return user;
     }
 
     @Transactional(readOnly = true)

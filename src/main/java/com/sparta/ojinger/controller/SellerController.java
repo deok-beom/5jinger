@@ -1,10 +1,12 @@
 package com.sparta.ojinger.controller;
 
-import com.sparta.ojinger.dto.ItemRequestDto;
+import com.sparta.ojinger.dto.seller.ItemRequestDto;
 import com.sparta.ojinger.dto.seller.SellerProfileRequestDto;
-import com.sparta.ojinger.dto.SellerProfileResponseDto;
+import com.sparta.ojinger.dto.seller.SellerProfileResponseDto;
 import com.sparta.ojinger.dto.seller.RequestCustomerResponseDto;
 import com.sparta.ojinger.entity.Seller;
+import com.sparta.ojinger.exception.CustomException;
+import com.sparta.ojinger.exception.ErrorCode;
 import com.sparta.ojinger.security.UserDetailsImpl;
 import com.sparta.ojinger.service.CustomerRequestService;
 import com.sparta.ojinger.service.ItemService;
@@ -30,21 +32,28 @@ public class SellerController {
 
     @PatchMapping("/profile")
     public ResponseEntity updateMySellerProfile(@RequestBody SellerProfileRequestDto sellerProfileRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        sellerService.updateMySellerProfile(sellerProfileRequestDto, userDetails);
+        sellerService.updateMySellerProfile(sellerProfileRequestDto, userDetails.getUser());
         return new ResponseEntity<>("프로필 설정이 완료 되었습니다. ", HttpStatus.OK);
     }
 
     @GetMapping("/profile")
     public SellerProfileResponseDto getMySellerProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return sellerService.getMySellerProfile(userDetails);
+        return sellerService.getMySellerProfileResponseDto(userDetails.getUser().getId());
     }
 
     // 나의 상품 등록
     @PostMapping("/item")
     public ResponseEntity<String> addItem(@RequestBody ItemRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        // 전달 받은 데이터가 올바르지 않으면 예외를 발생한다.
+        if (requestDto.getTitle().trim().equals("") || requestDto.getContent().trim().equals("") || requestDto.getPrice() == 0) {
+            throw new CustomException(ErrorCode.INVALID_CREATE_ITEM);
+        }
+
+        // 현재 사용자의 판매자 정보를 불러온다.
         Seller seller = sellerService.getSellerByUserId(userDetails.getUser().getId());
+
         itemService.addItem(requestDto, seller);
-        return new ResponseEntity<>("상품 등록이 완료되었습니다.", HttpStatus.OK);
+        return new ResponseEntity<>("상품 등록이 완료되었습니다.", HttpStatus.CREATED);
     }
 
     // 나의 상품 수정
@@ -64,23 +73,20 @@ public class SellerController {
     // 구매자 요청 목록 조회
     @GetMapping("/requests")
     public List<RequestCustomerResponseDto> getCustomerRequestList(@RequestParam int page, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        Seller seller = sellerService.getSellerByUserId(userDetails.getUser().getId());
-        return customerRequestService.getMyCustomerRequestList(seller.getId(), pageableSetting(page));
+        return customerRequestService.getReceivedRequestList(userDetails.getUser().getId(), pageableSetting(page));
     }
 
     // 구매자 요청 수락
     @PatchMapping("/requests/{id}/approve")
     public ResponseEntity<String> approveCustomerRequest(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        Seller seller = sellerService.getSellerByUserId(userDetails.getUser().getId());
-        customerRequestService.approveCustomerRequest(id, seller);
+        customerRequestService.approveCustomerRequest(id, userDetails.getUser().getId());
         return new ResponseEntity<>("요청 수락완료", HttpStatus.ACCEPTED);
     }
 
     // 구매자 요청 거절
-    @DeleteMapping("/requests/{id}")
+    @PatchMapping("/requests/{id}/reject")
     public ResponseEntity<String> customerRequestReject(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        Seller seller = sellerService.getSellerByUserId(userDetails.getUser().getId());
-        customerRequestService.customerRequestReject(id, seller);
+        customerRequestService.rejectCustomerRequest(id, userDetails.getUser().getId());
         return new ResponseEntity<>("요청 거절완료", HttpStatus.OK);
     }
 }

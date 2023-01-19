@@ -4,25 +4,16 @@ import com.sparta.ojinger.dto.operator.CustomerResponseDto;
 import com.sparta.ojinger.dto.PromotionRequestResponseDto;
 import com.sparta.ojinger.dto.operator.SellerResponseDto;
 import com.sparta.ojinger.entity.ProcessStatus;
-import com.sparta.ojinger.entity.Seller;
-import com.sparta.ojinger.entity.User;
-import com.sparta.ojinger.entity.UserRoleEnum;
-import com.sparta.ojinger.exception.CustomException;
 import com.sparta.ojinger.service.PromotionRequestService;
 import com.sparta.ojinger.service.OperatorService;
 import com.sparta.ojinger.service.SellerService;
 import com.sparta.ojinger.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DuplicateKeyException;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import static com.sparta.ojinger.exception.ErrorCode.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,33 +25,35 @@ public class OperatorController {
     private final OperatorService operatorService;
 
     @GetMapping("/customers")
-    public List<CustomerResponseDto> getAllCustomers(@PageableDefault(size = 5) Pageable pageable) {
-        return userService.getAllCustomers(pageable);
+    public List<CustomerResponseDto> getAllCustomers(@RequestParam int page) {
+        return userService.getAllCustomers(PageConfig.pageableSetting(page));
     }
 
     @GetMapping("/sellers")
-    public List<SellerResponseDto> getAllSellers(@PageableDefault(size = 5) Pageable pageable) {
-        return sellerService.getAllSellers(pageable);
+    public List<SellerResponseDto> getAllSellers(@RequestParam int page) {
+        return sellerService.getAllSellers(PageConfig.pageableSetting(page));
     }
 
     @GetMapping("/promotions")
-    public List<PromotionRequestResponseDto> getAllPromotionRequests(@PageableDefault(size = 5) Pageable pageable) {
-        return promotionRequestService.getAllPromotionRequests(pageable);
+    public List<PromotionRequestResponseDto> getAllPromotionRequests(@RequestParam int page) {
+        return promotionRequestService.getAllPromotionRequests(PageConfig.pageableSetting(page));
     }
 
     @PostMapping("/promotions/{id}")
-    public ResponseEntity approvePromotionRequest(@PathVariable Long id) {
+    public ResponseEntity<String> approvePromotionRequest(@PathVariable Long id) {
         operatorService.promoteCustomerToSeller(id);
-        return new ResponseEntity<>("등업 성공", HttpStatus.OK);
+        return new ResponseEntity<>("등업을 승인하고 등업 처리하였습니다.", HttpStatus.OK);
     }
 
     @PatchMapping("/promotions/{id}")
-    public void rejectPromotionRequest(@PathVariable Long id) {
+    public ResponseEntity<String> rejectPromotionRequest(@PathVariable Long id) {
         promotionRequestService.updatePromotionRequestStatus(id, ProcessStatus.REJECTED);
+        return new ResponseEntity<>("등업 반려 하였습니다.", HttpStatus.OK);
     }
 
-    @PatchMapping("/seller/{id}/demotion")
-    public void demoteSellerToCustomer(@PathVariable Long id) {
+    @PatchMapping("/seller/{id}")
+    public ResponseEntity<String> demoteSellerToCustomer(@PathVariable Long id) {
         operatorService.demoteSellerToCustomer(id);
+        return new ResponseEntity<>("회원 등급을 강등 하였습니다.", HttpStatus.OK);
     }
 }
