@@ -2,6 +2,7 @@ package com.sparta.ojinger.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -29,6 +30,7 @@ public class CustomerRequest {
     @Column(name = "seller_id", nullable = false)
     private Long sellerId;
 
+    @Setter
     private ProcessStatus status;
 
     @CreatedDate
@@ -42,9 +44,5 @@ public class CustomerRequest {
         this.requestDate = LocalDateTime.now();
         this.userId = userId;
         this.sellerId = sellerId;
-    }
-
-    public void updateCustomerRequestStatus(ProcessStatus status) {
-        this.status = status;
     }
 }

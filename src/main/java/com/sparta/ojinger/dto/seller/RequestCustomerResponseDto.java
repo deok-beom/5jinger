@@ -1,4 +1,4 @@
-package com.sparta.ojinger.dto.customer;
+package com.sparta.ojinger.dto.seller;
 
 import com.sparta.ojinger.entity.CustomerRequest;
 import com.sparta.ojinger.entity.ProcessStatus;

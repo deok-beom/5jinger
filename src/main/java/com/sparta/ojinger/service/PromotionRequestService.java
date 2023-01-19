@@ -26,10 +26,11 @@ public class PromotionRequestService {
     // 일반 고객 -> 판매자 등업 요청
     @Transactional
     public void requestPromotion(User customer) {
-        Optional<PromotionRequest> optionalElevation = promotionRequestRepository.findByUserId(customer.getId());
-        if (optionalElevation.isPresent()) {
+        Optional<PromotionRequest> optionalRequest = promotionRequestRepository.findByUserIdAndStatus(customer.getId(), ProcessStatus.PENDING);
+        if (optionalRequest.isPresent()) {
             throw new CustomException(ErrorCode.REQUEST_IS_EXIST);
         }
+
         PromotionRequest request = new PromotionRequest(customer, ProcessStatus.PENDING);
         promotionRequestRepository.save(request);
     }
@@ -39,9 +40,8 @@ public class PromotionRequestService {
         List<PromotionRequestResponseDto> responseDtoList = new ArrayList<>();
         Page<PromotionRequest> promotions = promotionRequestRepository.findAll(pageable);
 
-        for (PromotionRequest promotionRequest : promotions) {
-            PromotionRequestResponseDto responseDto = new PromotionRequestResponseDto(promotionRequest.getId(),
-                    promotionRequest.getUser().getId(), promotionRequest.getRequestDate(), promotionRequest.getStatus());
+        for (PromotionRequest request : promotions) {
+            PromotionRequestResponseDto responseDto = new PromotionRequestResponseDto(request);
             responseDtoList.add(responseDto);
         }
 

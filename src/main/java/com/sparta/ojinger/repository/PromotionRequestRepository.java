@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface PromotionRequestRepository extends JpaRepository<PromotionRequest, Long> {
     Page<PromotionRequest> findAllByStatus(ProcessStatus status, Pageable pageable);
 
-    Optional<PromotionRequest> findByUserId(Long id);
+    Optional<PromotionRequest> findByUserIdAndStatus(Long id, ProcessStatus status);
 }

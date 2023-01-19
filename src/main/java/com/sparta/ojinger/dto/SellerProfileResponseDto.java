@@ -1,21 +1,28 @@
 package com.sparta.ojinger.dto;
 
 import com.sparta.ojinger.entity.Seller;
+import com.sparta.ojinger.entity.UserRoleEnum;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
 public class SellerProfileResponseDto {
-    private String nickname;
-    private String image;
-    private String intro;
-    private String category;
 
-    public SellerProfileResponseDto(Seller seller){
-        this.nickname = seller.getUser().getNickname();
+    private final Long sellerId;
+
+    private final String nickName;
+
+    private final String image;
+
+    private  String category;
+
+    private UserRoleEnum role;
+
+    public SellerProfileResponseDto(Seller seller) {
+        this.sellerId = seller.getId();
+        this.nickName = seller.getUser().getNickname();
         this.image = seller.getUser().getImage();
-        this.intro = seller.getIntro();
-        this.category = seller.getCategoriesToString();
+        //this.category = seller.getCategory();
+        this.role = seller.getUser().getRole();
     }
 }

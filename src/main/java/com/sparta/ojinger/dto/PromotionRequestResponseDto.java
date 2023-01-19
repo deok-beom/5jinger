@@ -1,6 +1,7 @@
 package com.sparta.ojinger.dto;
 
 import com.sparta.ojinger.entity.ProcessStatus;
+import com.sparta.ojinger.entity.PromotionRequest;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -12,10 +13,10 @@ public class PromotionRequestResponseDto {
     private final LocalDateTime requestDate;
     private final ProcessStatus status;
 
-    public PromotionRequestResponseDto(Long requestId, Long userId, LocalDateTime requestDate, ProcessStatus status) {
-        this.requestId = requestId;
-        this.userId = userId;
-        this.requestDate = requestDate;
-        this.status = status;
+    public PromotionRequestResponseDto(PromotionRequest request) {
+        this.requestId = request.getId();
+        this.userId = request.getUser().getId();
+        this.requestDate = request.getRequestDate();
+        this.status = request.getStatus();
     }
 }

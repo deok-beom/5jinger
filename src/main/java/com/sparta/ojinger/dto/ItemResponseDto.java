@@ -1,5 +1,7 @@
 package com.sparta.ojinger.dto;
 
+import com.sparta.ojinger.entity.Item;
+import com.sparta.ojinger.entity.TradeStatus;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -13,18 +15,20 @@ public class ItemResponseDto {
     private final String content;
     private final String category;
     private final Long price;
+    private final TradeStatus status;
     private final LocalDateTime createdAt;
     private final LocalDateTime modifiedAt;
 
-    public ItemResponseDto(Long id, Long sellerId, String sellerNickName, String title, String content, String category, Long price, LocalDateTime createdAt, LocalDateTime modifiedAt) {
-        this.id = id;
-        this.sellerId = sellerId;
-        this.sellerNickName = sellerNickName;
-        this.title = title;
-        this.content = content;
-        this.category = category;
-        this.price = price;
-        this.createdAt = createdAt;
-        this.modifiedAt = modifiedAt;
+    public ItemResponseDto(Item item) {
+        this.id = item.getId();
+        this.sellerId = item.getSeller().getId();
+        this.sellerNickName = item.getSeller().getUser().getNickname();
+        this.title = item.getTitle();
+        this.content = item.getContent();
+        this.category = item.getCategory();
+        this.price = item.getPrice();
+        this.status = item.getStatus();
+        this.createdAt = item.getCreateAt();
+        this.modifiedAt = item.getModifiedAt();
     }
 }

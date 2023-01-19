@@ -1,7 +1,6 @@
-package com.sparta.ojinger.dto.customer;
+package com.sparta.ojinger.dto.user;
 
 import com.sparta.ojinger.entity.Seller;
-import com.sparta.ojinger.entity.User;
 import com.sparta.ojinger.entity.UserRoleEnum;
 import lombok.Getter;
 

@@ -1,12 +1,10 @@
 package com.sparta.ojinger.entity;
 
-import com.sparta.ojinger.dto.SellerProfileRequestDto;
-import com.sparta.ojinger.dto.SellerProfileResponseDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,6 +21,7 @@ public class Seller {
     private User user;
 
     @Column(nullable = true)
+    @Setter
     private String intro;
 
     @OneToMany(fetch = FetchType.LAZY)

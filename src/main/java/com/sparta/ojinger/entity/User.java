@@ -1,20 +1,18 @@
 package com.sparta.ojinger.entity;
 
-import com.sparta.ojinger.dto.customer.CustomerProfileRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity(name = "Users")
 @NoArgsConstructor
 @Getter
-public class User {
+public class User extends Timestamped {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, unique = true)
@@ -28,20 +26,18 @@ public class User {
     @Setter
     private UserRoleEnum role;
 
-    @Column(nullable = false)
-    private LocalDateTime signUpDate;
-
     @Column(nullable = true)
+    @Setter
     private String nickname;
 
     @Column(nullable = true)
+    @Setter
     private String image;
 
     public User(String username, String password, UserRoleEnum role){
         this.username = username;
         this.password = password;
         this.role = role;
-        this.signUpDate = LocalDateTime.now();
     }
 
 

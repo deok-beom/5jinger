@@ -1,11 +1,8 @@
 package com.sparta.ojinger.service;
 
-import com.sparta.ojinger.dto.SellerProfileRequestDto;
 import com.sparta.ojinger.dto.SellerProfileResponseDto;
-import com.sparta.ojinger.dto.SellerResponseDto;
-import com.sparta.ojinger.dto.customer.LookUpSellerResponseDto;
-import com.sparta.ojinger.dto.customer.LookUpSellersResponseDto;
-import com.sparta.ojinger.entity.Category;
+import com.sparta.ojinger.dto.operator.SellerResponseDto;
+import com.sparta.ojinger.dto.seller.SellerProfileRequestDto;
 import com.sparta.ojinger.entity.Seller;
 import com.sparta.ojinger.entity.User;
 import com.sparta.ojinger.exception.CustomException;
@@ -31,16 +28,38 @@ import static com.sparta.ojinger.exception.ErrorCode.USER_NOT_FOUND;
 public class SellerService {
     private final SellerRepository sellerRepository;
     private final CategoryService categoryService;
+    private final UserService userService;
 
+    // 판매자 리스트 조회
+    @Transactional(readOnly = true)
+    public List<SellerProfileResponseDto> getSellers(Pageable pageable) {
+        Page<Seller> sellersPage = sellerRepository.findAll(pageable);
+        if (sellersPage.isEmpty()) {
+            throw new CustomException(ErrorCode.PAGINATION_IS_NOT_EXIST);
+        }
+
+        List<SellerProfileResponseDto> sellerProfileResponseDtoList = new ArrayList<>();
+        for (Seller seller : sellersPage) {
+            sellerProfileResponseDtoList.add(new SellerProfileResponseDto(seller));
+        }
+        return sellerProfileResponseDtoList;
+    }
+
+    // 특정 판매자 조회
+    @Transactional(readOnly = true)
+    public SellerProfileResponseDto getSellerById(Long id) {
+        Seller seller = sellerRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        return new SellerProfileResponseDto(seller);
+    }
+
+    //
     @Transactional(readOnly = true)
     public List<SellerResponseDto> getAllSellers(Pageable pageable) {
         List<SellerResponseDto> responseDtoList = new ArrayList<>();
         Page<Seller> sellers = sellerRepository.findAll(pageable);
 
         for (Seller seller : sellers) {
-            User user = seller.getUser();
-            SellerResponseDto responseDto = new SellerResponseDto(user.getId(), user.getUsername(),
-                    user.getNickname(), user.getImage(), user.getSignUpDate(), seller.getIntro(), seller.getCategoriesToString());
+            SellerResponseDto responseDto = new SellerResponseDto(seller);
             responseDtoList.add(responseDto);
         }
 
@@ -71,21 +90,23 @@ public class SellerService {
     }
 
     @Transactional
-    public void updateSellerProfile(SellerProfileRequestDto requestDto, UserDetailsImpl userDetails){
-        Seller seller = sellerRepository.findByUser(userDetails.getUser()).orElseThrow(
-                () -> new CustomException(USER_NOT_FOUND)
-        );
-        seller.updateProfile(requestDto.getIntro(), requestDto.getNickname(), requestDto.getImage());
-        List<Category> categories = categoryService.getCategoryFromString(requestDto.getCategory());
-        seller.addCategory(categories);
+    public void updateMySellerProfile(SellerProfileRequestDto requestDto, UserDetailsImpl userDetails){
+        Seller seller = getSellerByUserId(userDetails.getUser().getId());
+        userService.updateMyProfile(requestDto, userDetails.getUsername());
+
+        if (!requestDto.getIntro().trim().equals("")) {
+            seller.setIntro(requestDto.getIntro());
+        }
+
+        if (!requestDto.getCategory().trim().equals("")) {
+            // List<Category> categories = categoryService.getCategoryFromString(requestDto.getCategory());
+            // seller.addCategory(categories);
+        }
     }
 
-    @Transactional
-    public SellerProfileResponseDto getSellerProfile(UserDetailsImpl userDetails){
-        Seller seller = sellerRepository.findByUser(userDetails.getUser()).orElseThrow(
-                () -> new CustomException(USER_NOT_FOUND)
-        );
-
+    @Transactional(readOnly = true)
+    public SellerProfileResponseDto getMySellerProfile(UserDetailsImpl userDetails){
+        Seller seller = getSellerByUserId(userDetails.getUser().getId());
         return new SellerProfileResponseDto(seller);
     }
 
@@ -96,27 +117,5 @@ public class SellerService {
         );
 
         return seller;
-    }
-
-    //판매자 리스트 조회
-    //판매자 리스트 조회
-    @Transactional
-    public List<LookUpSellersResponseDto> lookUpSellersList(Pageable pageable) {
-        Page<Seller> sellersPage = sellerRepository.findAll(pageable);
-        if (sellersPage.isEmpty()) {
-            throw new CustomException(ErrorCode.PAGINATION_IS_NOT_EXIST);
-        }
-        List<LookUpSellersResponseDto> lookUpSellersResponseDtoList = new ArrayList<>();
-        for (Seller seller : sellersPage) {
-            lookUpSellersResponseDtoList.add(new LookUpSellersResponseDto(seller));
-        }
-        return lookUpSellersResponseDtoList;
-    }
-
-    //판매자 조회
-    @Transactional
-    public LookUpSellerResponseDto lookUpSeller(Long id) {
-        Seller seller = sellerRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        return new LookUpSellerResponseDto(seller);
     }
 }

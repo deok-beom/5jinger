@@ -1,7 +1,8 @@
 package com.sparta.ojinger.service;
 
 
-import com.sparta.ojinger.dto.customer.*;
+import com.sparta.ojinger.dto.seller.RequestCustomerResponseDto;
+import com.sparta.ojinger.dto.user.*;
 import com.sparta.ojinger.entity.*;
 import com.sparta.ojinger.exception.CustomException;
 import com.sparta.ojinger.exception.ErrorCode;
@@ -28,7 +29,6 @@ public class CustomerRequestRequestServiceImpl implements CustomerRequestService
         if (optionalCustomerRequest.isPresent()) {
             throw new CustomException(ErrorCode.REQUEST_IS_EXIST);
         }
-
         CustomerRequest customerRequest = new CustomerRequest(itemId, requestCustomerRequestDto.getMessage(), ProcessStatus.PENDING, user.getId(), sellerId);
         customerRequestRepository.save(customerRequest);
     }
@@ -42,24 +42,27 @@ public class CustomerRequestRequestServiceImpl implements CustomerRequestService
         }
 
         CustomerRequest request = optionalCustomerRequest.get();
+        if (request.getUserId() != user.getId()) {
+            throw new CustomException(ErrorCode.INVALID_AUTH_TOKEN);
+        }
+
         if (!request.getStatus().equals(ProcessStatus.PENDING)) {
             throw new CustomException(ErrorCode.REQUEST_IS_EXPIRED);
         }
 
-        request.updateCustomerRequestStatus(ProcessStatus.CANCELED);
-        customerRequestRepository.save(optionalCustomerRequest.get());
+        request.setStatus(ProcessStatus.CANCELED);
     }
 
     // 구매자 요청 리스트 조회
     @Transactional
-    public List<RequestCustomerResponseDto> customerRequestList(Long id, Pageable pageable) {
-        Page<CustomerRequest> customerRequestPage = customerRequestRepository.findAllBySellerId(id, pageable);
-        if (customerRequestPage.isEmpty()) {
+    public List<RequestCustomerResponseDto> getMyCustomerRequestList(Long sellerId, Pageable pageable) {
+        Page<CustomerRequest> requests = customerRequestRepository.findAllBySellerId(sellerId, pageable);
+        if (requests.isEmpty()) {
             throw new CustomException(ErrorCode.PAGINATION_IS_NOT_EXIST);
         }
         List<RequestCustomerResponseDto> requestCustomerResponseDtoList = new ArrayList<>();
-        for (CustomerRequest customerRequest : customerRequestPage) {
-            requestCustomerResponseDtoList.add(new RequestCustomerResponseDto(customerRequest));
+        for (CustomerRequest request : requests) {
+            requestCustomerResponseDtoList.add(new RequestCustomerResponseDto(request));
         }
         return requestCustomerResponseDtoList;
     }
@@ -67,15 +70,10 @@ public class CustomerRequestRequestServiceImpl implements CustomerRequestService
 
     //구매자 요청 수락
     @Transactional
-    public void customerRequestAccept(Long requestId, Seller seller) {
-        CustomerRequest customerRequest = validRequests(requestId, seller);
-
-        if (customerRequest.getStatus().equals(ProcessStatus.APPROVED)) {
-            throw new CustomException(ErrorCode.REQUEST_IS_ACCEPT);
-        }
-
-        customerRequest.updateCustomerRequestStatus(ProcessStatus.APPROVED);
-        customerRequestRepository.save(customerRequest);
+    public void approveCustomerRequest(Long requestId, Seller seller) {
+        CustomerRequest request = validRequests(requestId, seller);
+        request.setStatus(ProcessStatus.APPROVED);
+        customerRequestRepository.save(request);
     }
 
     //구매자 요청 거절
@@ -87,14 +85,14 @@ public class CustomerRequestRequestServiceImpl implements CustomerRequestService
             throw new CustomException(ErrorCode.REQUEST_IS_REJECTED);
         }
 
-        customerRequest.updateCustomerRequestStatus(ProcessStatus.REJECTED);
+        customerRequest.setStatus(ProcessStatus.REJECTED);
         customerRequestRepository.save(customerRequest);
     }
 
     private CustomerRequest validRequests(Long requestId, Seller seller) {
         CustomerRequest customerRequest = customerRequestRepository.findById(requestId).orElseThrow(() -> new CustomException(ErrorCode.REQUEST_IS_NOT_EXIST));
         if (customerRequest.getSellerId() != seller.getId()) {
-            throw new IllegalArgumentException();
+            throw new CustomException(ErrorCode.INVALID_AUTH_TOKEN);
         }
 
         if (!customerRequest.getStatus().equals(ProcessStatus.PENDING)) {

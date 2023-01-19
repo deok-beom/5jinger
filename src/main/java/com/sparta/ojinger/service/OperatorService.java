@@ -29,7 +29,7 @@ public class OperatorService {
         try {
             user = userService.updateCustomerRole(userId, UserRoleEnum.SELLER);
         } catch (IllegalArgumentException e) {
-            throw new CustomException(IMPROPER_ELEVATION);
+            throw new CustomException(IMPROPER_PROMOTION);
         } catch (EntityNotFoundException e){
             throw new CustomException(USER_NOT_FOUND);
         }

@@ -1,4 +1,4 @@
-package com.sparta.ojinger.dto.customer;
+package com.sparta.ojinger.dto.user;
 
 import com.sparta.ojinger.entity.User;
 import lombok.Getter;

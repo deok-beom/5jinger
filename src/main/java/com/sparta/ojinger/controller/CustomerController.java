@@ -2,9 +2,13 @@ package com.sparta.ojinger.controller;
 
 
 import com.sparta.ojinger.dto.ItemResponseDto;
-import com.sparta.ojinger.dto.customer.*;
+import com.sparta.ojinger.dto.SellerProfileResponseDto;
+import com.sparta.ojinger.dto.user.*;
 import com.sparta.ojinger.entity.Seller;
 import com.sparta.ojinger.entity.User;
+import com.sparta.ojinger.entity.UserRoleEnum;
+import com.sparta.ojinger.exception.CustomException;
+import com.sparta.ojinger.exception.ErrorCode;
 import com.sparta.ojinger.security.UserDetailsImpl;
 import com.sparta.ojinger.service.*;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +25,7 @@ import static com.sparta.ojinger.controller.PageConfig.pageableSetting;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/sellers")
 public class CustomerController {
 
     private final CustomerRequestRequestServiceImpl customerService;
@@ -29,36 +34,27 @@ public class CustomerController {
     private final PromotionRequestService promotionRequestService;
     private final UserService userService;
 
-    // 판매자 전체 조회
+    // 전체 판매자 목록 조회
     @GetMapping("/sellers")
-    public List<LookUpSellersResponseDto> lookUpSellersList(@RequestParam int page) {
-        return sellerService.lookUpSellersList(pageableSetting(page));
+    public List<SellerProfileResponseDto> getSellers(@RequestParam int page) {
+        return sellerService.getSellers(pageableSetting(page));
     }
 
     // 판매자 조회
     @GetMapping("/sellers/{id}")
-    public LookUpSellerResponseDto lookUpSeller(@PathVariable Long id) {
-        return sellerService.lookUpSeller(id);
-    }
-
-    // 판매자 권한 등업 요청
-    @PostMapping("/requests/promotion")
-    public ResponseEntity<String> requestPromotion(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        User customer = userService.getUserById(userDetails.getUser().getId());
-        promotionRequestService.requestPromotion(customer);
-        return new ResponseEntity<>("등록 요청 완료", HttpStatus.OK);
+    public SellerProfileResponseDto getSeller(@PathVariable Long id) {
+        return sellerService.getSellerById(id);
     }
 
     // 판매자에게 요청
     @PostMapping("/requests/items/{id}")
-    public ResponseEntity<String> customerRequest(@PathVariable Long id, @RequestBody RequestCustomerRequestDto requestCustomerRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<String> requestToCustomerAboutItem(@PathVariable Long id, @RequestBody RequestCustomerRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         ItemResponseDto item = itemService.getItemById(id);
         Seller seller = sellerService.getSellerByUserId(item.getSellerId());
         if (seller.getUser().getId() == userDetails.getUser().getId()) {
-            // 판매자 자신이 자신의 물건에 요청할 수 없다
-            throw new IllegalArgumentException();
+            throw new CustomException(ErrorCode.INVALID_CUSTOMER_REQUEST);
         }
-        customerService.createCustomerRequest(id, requestCustomerRequestDto, userDetails.getUser(), item.getSellerId());
+        customerService.createCustomerRequest(id, requestDto, userDetails.getUser(), item.getSellerId());
         return new ResponseEntity<>("요청 완료", HttpStatus.OK);
     }
 
@@ -67,5 +63,17 @@ public class CustomerController {
     public ResponseEntity<String> customerCancelRequest(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         customerService.cancelCustomerRequest(id, userDetails.getUser());
         return new ResponseEntity<>("요청 취소", HttpStatus.OK);
+    }
+
+
+    // 판매자 권한 등업 요청
+    @PostMapping("/requests/promotion")
+    public ResponseEntity<String> requestPromotion(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User customer = userService.getUserByName(userDetails.getUsername());
+        if (!customer.getRole().equals(UserRoleEnum.CUSTOMER)) {
+            throw new CustomException(ErrorCode.NOT_CUSTOMERS);
+        }
+        promotionRequestService.requestPromotion(customer);
+        return new ResponseEntity<>("등록 요청 완료", HttpStatus.OK);
     }
 }

@@ -1,9 +1,9 @@
 package com.sparta.ojinger.controller;
 
 import com.sparta.ojinger.dto.ItemRequestDto;
-import com.sparta.ojinger.dto.SellerProfileRequestDto;
+import com.sparta.ojinger.dto.seller.SellerProfileRequestDto;
 import com.sparta.ojinger.dto.SellerProfileResponseDto;
-import com.sparta.ojinger.dto.customer.RequestCustomerResponseDto;
+import com.sparta.ojinger.dto.seller.RequestCustomerResponseDto;
 import com.sparta.ojinger.entity.Seller;
 import com.sparta.ojinger.security.UserDetailsImpl;
 import com.sparta.ojinger.service.CustomerRequestService;
@@ -29,45 +29,50 @@ public class SellerController {
     private final CustomerRequestService customerRequestService;
 
     @PatchMapping("/profile")
-    public ResponseEntity updateSellerProfile(@RequestBody SellerProfileRequestDto sellerProfileRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        sellerService.updateSellerProfile(sellerProfileRequestDto, userDetails);
+    public ResponseEntity updateMySellerProfile(@RequestBody SellerProfileRequestDto sellerProfileRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        sellerService.updateMySellerProfile(sellerProfileRequestDto, userDetails);
         return new ResponseEntity<>("프로필 설정이 완료 되었습니다. ", HttpStatus.OK);
     }
 
     @GetMapping("/profile")
-    public SellerProfileResponseDto getSellerProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return sellerService.getSellerProfile(userDetails);
+    public SellerProfileResponseDto getMySellerProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return sellerService.getMySellerProfile(userDetails);
     }
 
-    // 아이템 등록
+    // 나의 상품 등록
     @PostMapping("/item")
-    public void addItem(@RequestBody ItemRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<String> addItem(@RequestBody ItemRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         Seller seller = sellerService.getSellerByUserId(userDetails.getUser().getId());
         itemService.addItem(requestDto, seller);
+        return new ResponseEntity<>("상품 등록이 완료되었습니다.", HttpStatus.OK);
     }
 
-    @PatchMapping("/items/{id}")
-    public void updateItem(@RequestBody ItemRequestDto requestDto, @PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    // 나의 상품 수정
+    @PatchMapping("/items/{id}/update")
+    public ResponseEntity<String> updateItem(@RequestBody ItemRequestDto requestDto, @PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         itemService.updateItem(requestDto, id, userDetails.getUser().getId());
+        return new ResponseEntity<>("상품 정보 수정이 완료되었습니다.", HttpStatus.OK);
     }
 
-    @DeleteMapping("/items/{id}")
-    public void deleteItem(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        itemService.deleteItem(id, userDetails.getUser());
+    // 나의 상품 판매 중지
+    @PatchMapping("/items/{id}/suspend")
+    public ResponseEntity<String> suspendItem(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        itemService.suspendItem(id, userDetails.getUser());
+        return new ResponseEntity<>("상품 삭제가 완료되었습니다.", HttpStatus.OK);
     }
 
-    // 구매자 요청 리스트 조회
+    // 구매자 요청 목록 조회
     @GetMapping("/requests")
-    public List<RequestCustomerResponseDto> lookUpCustomerRequestList(@RequestParam int page, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public List<RequestCustomerResponseDto> getCustomerRequestList(@RequestParam int page, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         Seller seller = sellerService.getSellerByUserId(userDetails.getUser().getId());
-        return customerRequestService.customerRequestList(seller.getId(), pageableSetting(page));
+        return customerRequestService.getMyCustomerRequestList(seller.getId(), pageableSetting(page));
     }
 
     // 구매자 요청 수락
-    @PatchMapping("/requests/{id}/accept")
-    public ResponseEntity<String> customerRequestAccept(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    @PatchMapping("/requests/{id}/approve")
+    public ResponseEntity<String> approveCustomerRequest(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         Seller seller = sellerService.getSellerByUserId(userDetails.getUser().getId());
-        customerRequestService.customerRequestAccept(id, seller);
+        customerRequestService.approveCustomerRequest(id, seller);
         return new ResponseEntity<>("요청 수락완료", HttpStatus.ACCEPTED);
     }
 

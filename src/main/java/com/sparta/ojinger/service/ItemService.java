@@ -2,12 +2,13 @@ package com.sparta.ojinger.service;
 
 import com.sparta.ojinger.dto.ItemRequestDto;
 import com.sparta.ojinger.dto.ItemResponseDto;
-import com.sparta.ojinger.entity.Item;
-import com.sparta.ojinger.entity.Seller;
-import com.sparta.ojinger.entity.User;
-import com.sparta.ojinger.entity.UserRoleEnum;
+import com.sparta.ojinger.entity.*;
+import com.sparta.ojinger.exception.CustomException;
+import com.sparta.ojinger.exception.ErrorCode;
 import com.sparta.ojinger.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,13 +23,11 @@ public class ItemService {
     public final ItemRepository itemRepository;
 
     @Transactional(readOnly = true)
-    public List<ItemResponseDto> getAllItem() {
-        List<Item> items = itemRepository.findAll();
+    public List<ItemResponseDto> getAllItem(Pageable pageable) {
+        Page<Item> items = itemRepository.findAll(pageable);
         List<ItemResponseDto> itemResponseDtoList = new ArrayList<>();
         for (Item item : items) {
-            ItemResponseDto itemResponseDto = new ItemResponseDto(item.getId(), item.getSeller().getId(),
-                    item.getSeller().getUser().getNickname(), item.getTitle(), item.getContent(),
-                    item.getCategory(), item.getPrice(), item.getCreateAt(), item.getModifiedAt());
+            ItemResponseDto itemResponseDto = new ItemResponseDto(item);
             itemResponseDtoList.add(itemResponseDto);
         }
 
@@ -39,13 +38,11 @@ public class ItemService {
     public ItemResponseDto getItemById(Long id) {
         Optional<Item> optionalItem = itemRepository.findById(id);
         if (optionalItem.isEmpty()) {
-            throw new EntityNotFoundException();
+            throw new CustomException(ErrorCode.ENTITY_NOT_FOUND);
         }
 
         Item item = optionalItem.get();
-        return new ItemResponseDto(item.getId(), item.getSeller().getId(), item.getSeller().getUser().getNickname(),
-                item.getTitle(), item.getContent(),
-                item.getCategory(), item.getPrice(), item.getCreateAt(), item.getModifiedAt());
+        return new ItemResponseDto(item);
     }
 
     @Transactional
@@ -57,15 +54,11 @@ public class ItemService {
 
     @Transactional
     public void updateItem(ItemRequestDto requestDto, Long itemId, Long userId) {
-        Optional<Item> optionalItem = itemRepository.findById(itemId);
-        if (optionalItem.isEmpty()) {
-            throw new EntityNotFoundException();
-        }
+        Item item = findItemAndValidUpdatable(itemId);
 
-        Item item = optionalItem.get();
         // 얻어온 아이템이 현재 요청한 유저의 아이템인지 확인
         if (item.getSeller().getUser().getId() != userId) {
-            throw new IllegalArgumentException();
+            throw new CustomException(ErrorCode.INVALID_AUTH_TOKEN);
         }
 
         // requestDto에 실려온 제목이 공백이 아니면 업데이트 해준다.
@@ -80,7 +73,7 @@ public class ItemService {
 
         // requestDto에 실려온 카테고리가 공백이 아니면 업데이트 해준다.
         if (!requestDto.getCategory().trim().equals("")) {
-            item.setCategory(requestDto.getCategory());
+            //item.setCategory(requestDto.getCategory());
         }
 
         // requestDto에 실려온 가격이 공백이 아니면 업데이트 해준다.
@@ -91,23 +84,32 @@ public class ItemService {
         itemRepository.save(item);
     }
 
-    private boolean validNullOrBlank(String s) {
-        return !(s == null || s.trim().equals(""));
+    @Transactional
+    public void suspendItem(Long itemId, User user) {
+        Item item = findItemAndValidUpdatable(itemId);
+
+        // 삭제하려는 아이템을 등록한 사람이 요청한 사람 자기 자신이거나, 요청한 사람의 권한이 관리자라면 삭제를 수행
+        if (item.getSeller().getUser().getId() == user.getId() || user.getRole().equals(UserRoleEnum.ADMIN)) {
+            item.setStatus(TradeStatus.SUSPENSION);
+        } else {
+            throw new CustomException(ErrorCode.INVALID_AUTH_TOKEN);
+        }
     }
 
-    @Transactional
-    public void deleteItem(Long itemId, User user) {
+    @Transactional(readOnly = true)
+    public Item findItemAndValidUpdatable(Long itemId) {
         Optional<Item> optionalItem = itemRepository.findById(itemId);
         if (optionalItem.isEmpty()) {
-            throw new EntityNotFoundException();
+            throw new CustomException(ErrorCode.ENTITY_NOT_FOUND);
         }
 
         Item item = optionalItem.get();
-        // 삭제하려는 아이템을 등록한 사람이 요청한 사람 자기 자신이거나, 요청한 사람의 권한이 관리자라면 삭제를 수행
-        if (item.getSeller().getUser().getId() == user.getId() || user.getRole().equals(UserRoleEnum.ADMIN)) {
-            itemRepository.delete(item);
-        } else {
-            throw new IllegalArgumentException();
+
+        // 얻어온 아이템이 현재 수정할 수 없는 상태(status)인지 확인
+        if (!item.getStatus().equals(TradeStatus.ON_SALE)) {
+            throw new CustomException(ErrorCode.ITEM_IS_EXPIRED);
         }
+
+        return item;
     }
 }

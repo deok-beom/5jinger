@@ -1,8 +1,8 @@
 package com.sparta.ojinger.controller;
 
-import com.sparta.ojinger.dto.CustomerResponseDto;
+import com.sparta.ojinger.dto.operator.CustomerResponseDto;
 import com.sparta.ojinger.dto.PromotionRequestResponseDto;
-import com.sparta.ojinger.dto.SellerResponseDto;
+import com.sparta.ojinger.dto.operator.SellerResponseDto;
 import com.sparta.ojinger.entity.ProcessStatus;
 import com.sparta.ojinger.entity.Seller;
 import com.sparta.ojinger.entity.User;
@@ -61,14 +61,6 @@ public class OperatorController {
 
     @PatchMapping("/seller/{id}/demotion")
     public void demoteSellerToCustomer(@PathVariable Long id) {
-        Seller seller = sellerService.getSellerByUserId(id);
-        User user = userService.updateCustomerRole(seller.getUser().getId(), UserRoleEnum.CUSTOMER);
-
-        try {
-            userService.updateCustomerRole(id, UserRoleEnum.SELLER);
-            sellerService.deleteSeller(user);
-        } catch (DuplicateKeyException e) {
-            throw new CustomException(ENTITY_NOT_FOUND);
-        }
+        operatorService.demoteSellerToCustomer(id);
     }
 }

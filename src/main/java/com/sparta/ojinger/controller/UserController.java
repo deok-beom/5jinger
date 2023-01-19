@@ -1,8 +1,8 @@
 package com.sparta.ojinger.controller;
 
 import com.sparta.ojinger.dto.UserDto;
-import com.sparta.ojinger.dto.customer.CustomerProfileRequestDto;
-import com.sparta.ojinger.dto.customer.CustomerProfileResponseDto;
+import com.sparta.ojinger.dto.user.CustomerProfileRequestDto;
+import com.sparta.ojinger.dto.user.CustomerProfileResponseDto;
 import com.sparta.ojinger.jwt.JwtUtil;
 import com.sparta.ojinger.security.UserDetailsImpl;
 import com.sparta.ojinger.service.UserService;
@@ -13,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletResponse;
 
 
@@ -24,38 +25,35 @@ public class UserController {
     private final UserService userService;
     private final JwtUtil jwtUtil;
 
-    @PostMapping("/signup")
-    public ResponseEntity signUp(@RequestBody @Validated UserDto.signUpRequestDto signUpRequestDto, BindingResult bindingresult) {
-
-        System.out.println("테스트");
-        //유효성 검사 실패할 경우 에러메세지 반환
-        if (bindingresult.hasErrors()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bindingresult.getAllErrors().toString());
+    // 회원가입
+    @PostMapping("/signUp")
+    public ResponseEntity<String> signUp(@RequestBody @Validated UserDto.signUpRequestDto requestDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bindingResult.getAllErrors().toString());
         }
 
-        userService.signUp(signUpRequestDto);
+        userService.signUp(requestDto);
         return new ResponseEntity<>("회원가입에 성공하였습니다", HttpStatus.OK);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity login(@RequestParam String username, @RequestParam String password, HttpServletResponse response){
-
-        UserDto.loginResponseDto user = userService.login(username, password);
-
+    // 로그인
+    @PostMapping("/logIn")
+    public ResponseEntity<String> logIn(@RequestBody UserDto.logInRequestDto requestDto, HttpServletResponse response) {
+        UserDto.logInResponseDto user = userService.logIn(requestDto.getUsername(), requestDto.getPassword());
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getUsername(), user.getRole()));
-        return new ResponseEntity("로그인에 성공하였습니다.", HttpStatus.OK);
+        return new ResponseEntity<>("로그인에 성공하였습니다.", HttpStatus.OK);
     }
 
-    //프로필 설정
+    // 사용자 프로필(별칭, 이미지) 설정
     @PatchMapping("/profile")
-    public ResponseEntity<String> updateProfile(@RequestBody CustomerProfileRequestDto customerProfileRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        userService.updateProfile(customerProfileRequestDto, userDetails.getUser());
-        return new ResponseEntity<>("프로필 설정완료", HttpStatus.CREATED);
+    public ResponseEntity<String> updateMyProfile(@RequestBody CustomerProfileRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        userService.updateMyProfile(requestDto, userDetails.getUsername());
+        return new ResponseEntity<>("프로필 설정완료", HttpStatus.OK);
     }
 
-    //프로필 조회
+    // 사용자 프로필 조회
     @GetMapping("/profile")
-    public ResponseEntity<CustomerProfileResponseDto> lookUpProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return new ResponseEntity<>(userService.lookUpProfile(userDetails.getUser()), HttpStatus.OK);
+    public ResponseEntity<CustomerProfileResponseDto> getMyProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return new ResponseEntity<>(userService.getMyProfile(userDetails.getUsername()), HttpStatus.OK);
     }
 }
