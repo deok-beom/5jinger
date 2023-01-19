@@ -4,6 +4,7 @@ package com.sparta.ojinger.controller;
 
 import com.sparta.ojinger.dto.customer.*;
 import com.sparta.ojinger.security.UserDetailsImpl;
+import com.sparta.ojinger.service.CustomerService;
 import com.sparta.ojinger.service.CustomerServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

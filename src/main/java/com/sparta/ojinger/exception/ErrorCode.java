@@ -15,6 +15,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 public enum ErrorCode {
     //400 BAD_REQUEST 잘못된 요청
     INVALID_TOKEN(BAD_REQUEST, "토큰이 유효하지 않습니다."),
+    IMPROPER_ELEVATION(BAD_REQUEST, "회원이 승격할 수 없는 등급이거나 이미 판매자 등급입니다."),
 
 
     //401 UNAUTHORIZED 인증되지 않은 사용자
@@ -27,11 +28,11 @@ public enum ErrorCode {
     REQUEST_IS_EXIST(NOT_FOUND,"요청이 완료된 상태입니다."),
     REQUEST_IS_NOT_EXIST(NOT_FOUND,"요청한 내역이 없습니다."),
     PAGINATION_IS_NOT_EXIST(NOT_FOUND,"요청하신 페이지 내역이 존재하지 않습니다."),
-
-
+    ENTITY_NOT_FOUND(NOT_FOUND,  "데이터를 찾을 수 없습니다."),
 
     //409 CONFLICT 중복된 리소스
     DUPLICATE_USERNAME(CONFLICT, "중복된 username 입니다."),
+    DUPLICATE_SELLER(CONFLICT, "이미 판매자 데이터가 존재합니다."),
 
     //500
     SERVER_ERROR(INTERNAL_SERVER_ERROR, "서버 에러입니다.");

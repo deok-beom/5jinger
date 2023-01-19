@@ -6,6 +6,7 @@ import lombok.Getter;
 @Getter
 public class SellerElevationsRequestDto {
 
+    // Request id
     private Long id;
 
     private User user;

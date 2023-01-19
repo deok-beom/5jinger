@@ -6,13 +6,13 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class ElevationResponseDto {
+public class ElevationRequestResponseDto {
     private final Long requestId;
     private final Long userId;
     private final LocalDateTime requestDate;
     private final ElevationStatus status;
 
-    public ElevationResponseDto(Long requestId, Long userId, LocalDateTime requestDate, ElevationStatus status) {
+    public ElevationRequestResponseDto(Long requestId, Long userId, LocalDateTime requestDate, ElevationStatus status) {
         this.requestId = requestId;
         this.userId = userId;
         this.requestDate = requestDate;

@@ -6,7 +6,7 @@ import com.sparta.ojinger.entity.*;
 import com.sparta.ojinger.exception.CustomException;
 import com.sparta.ojinger.exception.ErrorCode;
 import com.sparta.ojinger.repository.CustomerRequestRepository;
-import com.sparta.ojinger.repository.ElevationRepository;
+import com.sparta.ojinger.repository.ElevationRequestRepository;
 import com.sparta.ojinger.repository.SellerRepository;
 import com.sparta.ojinger.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class CustomerServiceImpl implements CustomerService {
     private final UserRepository userRepository;
     private final SellerRepository sellerRepository;
     private final CustomerRequestRepository customerRequestRepository;
-    private final ElevationRepository elevationRepository;
+    private final ElevationRequestRepository elevationRequestRepository;
 
     //프로필 설정
     @Transactional
@@ -97,20 +97,20 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     public void elevationsRequest(Long id) {
         User customer = userRepository.findById(id).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
-        Optional<Elevation> optionalElevation = elevationRepository.findByUserId(id);
+        Optional<ElevationRequest> optionalElevation = elevationRequestRepository.findByUserId(id);
         if(optionalElevation.isPresent()) {
             throw new CustomException(ErrorCode.REQUEST_IS_EXIST);
         }
-        Elevation elevation = new Elevation(customer,ElevationStatus.PENDING);
+        //Elevation elevation = new Elevation(customer,ElevationStatus.PENDING);
 //        elevation.updateSatus(ElevationStatus.PENDING);
-        elevationRepository.save(elevation);
+        //elevationRepository.save(elevation);
     }
 
     //페이징
     public Pageable pageableSetting(int pageChoice) {
         Sort.Direction direction = Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, "signUpDate");
-        Pageable pageable = PageRequest.of(pageChoice - 1, 10, sort);
+        //Sort sort = Sort.by(direction, "signUpDate");
+        Pageable pageable = PageRequest.of(pageChoice - 1, 10);
         return pageable;
     }
 }

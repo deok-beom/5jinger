@@ -1,6 +1,7 @@
 package com.sparta.ojinger.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -9,7 +10,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-public class Elevation {
+@NoArgsConstructor
+public class ElevationRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -26,13 +28,13 @@ public class Elevation {
     @CreatedDate
     private LocalDateTime requestDate;
 
-    public void updateSatus(ElevationStatus status) {
-        this.status = status;
-    }
-
-    public Elevation(User user, ElevationStatus status) {
-        this.user = user;
-        this.status = status;
-        this.requestDate = LocalDateTime.now();
-    }
+//    public void updateStatus(ElevationStatus status) {
+//        this.status = status;
+//    }
+//
+//    public Elevation(User user, ElevationStatus status) {
+//        this.user = user;
+//        this.status = status;
+//        this.requestDate = LocalDateTime.now();
+//    }
 }
