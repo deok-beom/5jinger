@@ -68,7 +68,7 @@ public class SellerService {
     }
 
     @Transactional
-    public void setSellerProfile(SellerProfileRequestDto requestDto, UserDetailsImpl userDetails){
+    public void updateSellerProfile(SellerProfileRequestDto requestDto, UserDetailsImpl userDetails){
         Seller seller = sellerRepository.findByUser(userDetails.getUser()).orElseThrow(
                 () -> new CustomException(USER_NOT_FOUND)
         );

@@ -32,9 +32,13 @@ public class CustomerServiceImpl implements CustomerService {
 
     //프로필 설정
     @Transactional
-    public void createProfile(CustomerProfileRequestDto customerProfileRequestDto, User user) {
+    public void updateProfile(CustomerProfileRequestDto customerProfileRequestDto, User user) {
         User customer = userRepository.findById(user.getId()).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+<<<<<<< HEAD
         customer.updateUserProfile(customerProfileRequestDto.getNickName(), customerProfileRequestDto.getImage());
+=======
+        customer.userChangeNicknameAndImage(customerProfileRequestDto.getNickName(),customerProfileRequestDto.getImage());
+>>>>>>> 3034a0ebd0719d27199555929a4aedb469650625
         userRepository.save(customer);
     }
 
@@ -72,26 +76,26 @@ public class CustomerServiceImpl implements CustomerService {
 
     //판매자에게 요청
     @Transactional
-    public void sellerRequest(Long id, SellerElevationsRequestDto sellerElevationsRequestDto,User user) {
-        User customer = userRepository.findById(id).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
-        Optional<CustomerRequest> optionalCustomerRequest = customerRequestRepository.findById(id);
+    public void customerRequest(String username, RequestCustomerRequestDto requestCustomerRequestDto, User user) {
+        Optional<CustomerRequest> optionalCustomerRequest = customerRequestRepository.findByIdAndSellerUsername(user.getId(),username);
         if(optionalCustomerRequest.isPresent()) {
             throw new CustomException(ErrorCode.REQUEST_IS_EXIST);
         }
-        CustomerRequest customerRequest = new CustomerRequest(sellerElevationsRequestDto,customer);
+        CustomerRequest customerRequest = new CustomerRequest(username, requestCustomerRequestDto.getMessage(),false,user);
         customerRequestRepository.save(customerRequest);
     }
 
     //판매자에게 요청 취소
     @Transactional
-    public void sellerCancelRequest(Long id) {
-        User customer = userRepository.findById(id).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
-        Optional<CustomerRequest> optionalCustomerRequest = customerRequestRepository.findById(customer.getId());
+    public void customerCancelRequest(String username, User user) {
+        Optional<CustomerRequest> optionalCustomerRequest = customerRequestRepository.findByIdAndSellerUsername(user.getId(),username);
         if(optionalCustomerRequest.isEmpty()) {
             throw new CustomException(ErrorCode.REQUEST_IS_NOT_EXIST);
         }
         customerRequestRepository.delete(optionalCustomerRequest.get());
     }
+
+
 
     //판매자 권한 요청
     @Transactional
@@ -106,11 +110,59 @@ public class CustomerServiceImpl implements CustomerService {
         //elevationRepository.save(elevation);
     }
 
+    // 구매자 요청 리스트 조회
+    @Transactional
+    public List<RequestCustomerResponseDto> customerRequestList(int pageChoice) {
+        if (pageChoice < 1) {
+            throw new CustomException(ErrorCode.PAGINATION_IS_NOT_EXIST);
+        }
+        Page<CustomerRequest> customerRequestPage = customerRequestRepository.findAll(pageableSetting(pageChoice));
+        if (customerRequestPage.isEmpty()) {
+            throw new CustomException(ErrorCode.PAGINATION_IS_NOT_EXIST);
+        }
+        List<RequestCustomerResponseDto> requestCustomerResponseDtoList = new ArrayList<>();
+        for (CustomerRequest customerRequest : customerRequestPage) {
+            requestCustomerResponseDtoList.add(new RequestCustomerResponseDto(customerRequest));
+        }
+        return requestCustomerResponseDtoList;
+    }
+
+
+    //구매자 요청 수락
+    @Transactional
+    public void customerRequestAccept(Long requestId, User user) {
+        CustomerRequest customerRequest = customerRequestRepository.findById(requestId).orElseThrow(()-> new CustomException(ErrorCode.REQUEST_IS_NOT_EXIST));
+        Seller seller = sellerRepository.findByUser(user).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+        Optional<CustomerRequest> optionalCustomerRequest = customerRequestRepository.findByIdAndSellerUsername(requestId,seller.getUser().getUsername());        if(optionalCustomerRequest.get().isStatus() == true) {
+            throw  new CustomException(ErrorCode.REQUEST_IS_ACCEPT);
+        }
+        customerRequest.updateCustomerRequestStatus(true);
+        customerRequestRepository.save(customerRequest);
+    }
+
+    //구매자 요청 거절
+    @Transactional
+    public void customerRequestReject(Long requestId, User user) {
+        CustomerRequest customerRequest = customerRequestRepository.findById(requestId).orElseThrow(()-> new CustomException(ErrorCode.REQUEST_IS_NOT_EXIST));
+        Seller seller = sellerRepository.findByUser(user).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+        Optional<CustomerRequest> optionalCustomerRequest = customerRequestRepository.findByIdAndSellerUsername(requestId,seller.getUser().getUsername());
+        if(optionalCustomerRequest.get().isStatus() == true) {
+            throw  new CustomException(ErrorCode.REQUEST_IS_ACCEPT);
+        }
+        customerRequestRepository.delete(customerRequest);
+    }
+
     //페이징
     public Pageable pageableSetting(int pageChoice) {
         Sort.Direction direction = Sort.Direction.DESC;
+<<<<<<< HEAD
         //Sort sort = Sort.by(direction, "signUpDate");
         Pageable pageable = PageRequest.of(pageChoice - 1, 10);
+=======
+        Sort sort = Sort.by(direction, "id");
+        Pageable pageable = PageRequest.of(pageChoice - 1, 10, sort);
+>>>>>>> 3034a0ebd0719d27199555929a4aedb469650625
         return pageable;
     }
+
 }

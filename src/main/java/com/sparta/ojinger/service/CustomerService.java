@@ -9,17 +9,23 @@ import java.util.List;
 
 public interface CustomerService {
 
-    void createProfile(CustomerProfileRequestDto customerProfileRequestDto, User user);
+    void updateProfile(CustomerProfileRequestDto customerProfileRequestDto, User user);
 
     CustomerProfileResponseDto lookUpProfile(User user);
 
     List<LookUpSellersResponseDto> lookUpSellersList(int pageChoice);
 
+    List<RequestCustomerResponseDto> customerRequestList(int pageChoice);
+
     LookUpSellerResponseDto lookUpSeller(Long id);
 
-    void sellerRequest(Long id, SellerElevationsRequestDto sellerElevationsRequestDto,User user);
+    void customerRequest(String username, RequestCustomerRequestDto requestCustomerRequestDto, User user);
 
-    void sellerCancelRequest(Long id);
-//
+    void customerCancelRequest(String username, User user);
+
+    void customerRequestAccept(Long requestId, User user);
+
+    void customerRequestReject(Long requestId, User user);
+
      void elevationsRequest(Long id);
 }

@@ -9,6 +9,8 @@ import lombok.Getter;
 @Getter
 public class LookUpSellersResponseDto {
 
+    private final Long sellerId;
+
     private final String nickName;
 
     private final String image;
@@ -18,9 +20,10 @@ public class LookUpSellersResponseDto {
     private UserRoleEnum role;
 
     public LookUpSellersResponseDto(Seller seller) {
+        this.sellerId = seller.getId();
         this.nickName = seller.getUser().getNickname();
         this.image = seller.getUser().getImage();
-        this.category = seller.getUser().getCatagory();
+        this.category = seller.getCategory();
         this.role = seller.getUser().getRole();
     }
 }

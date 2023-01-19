@@ -22,9 +22,9 @@ public class SellerController {
     private final SellerService sellerService;
     private final ItemService itemService;
 
-    @PostMapping("/profile")
-    public ResponseEntity setSellerProfile(@RequestBody SellerProfileRequestDto sellerProfileRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        sellerService.setSellerProfile(sellerProfileRequestDto, userDetails);
+    @PatchMapping("/profile")
+    public ResponseEntity updateSellerProfile(@RequestBody SellerProfileRequestDto sellerProfileRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        sellerService.updateSellerProfile(sellerProfileRequestDto, userDetails);
         return new ResponseEntity<>("프로필 설정이 완료 되었습니다. ", HttpStatus.OK);
     }
 
@@ -49,5 +49,4 @@ public class SellerController {
     public void deleteItem(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         itemService.deleteItem(id, userDetails.getUser());
     }
-
 }

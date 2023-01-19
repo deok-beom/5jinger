@@ -1,10 +1,11 @@
 package com.sparta.ojinger.entity;
 
-import com.sparta.ojinger.dto.customer.SellerElevationsRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
@@ -19,12 +20,27 @@ public class CustomerRequest {
     @Column(nullable = false)
     private String message;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
-    public CustomerRequest(SellerElevationsRequestDto sellerElevationsRequestDto, User user) {
-        this.message = sellerElevationsRequestDto.getMessage();
-        this.user = user;
+    @Column(name = "seller_username", nullable = false)
+    private String sellerUsername;
+
+    private boolean status;
+
+    @CreatedDate
+    private LocalDateTime requestDate;
+
+
+    public CustomerRequest(String username, String message,boolean status, User user) {
+        this.sellerUsername = username;
+        this.message = message;
+        this.status = status;
+        this.requestDate = LocalDateTime.now();
+        this.userId = user.getId();
+    }
+
+    public void updateCustomerRequestStatus(boolean status){
+        this.status = status;
     }
 }

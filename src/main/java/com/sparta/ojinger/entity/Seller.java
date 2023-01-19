@@ -37,6 +37,7 @@ public class Seller {
         this.user = user;
     }
 
+<<<<<<< HEAD
     public void addCategory(List<Category> categories) {
         for (Category category : categories) {
             this.categories.add(category);
@@ -52,5 +53,11 @@ public class Seller {
             }
         }
         return sb.toString();
+=======
+    public void profileUpdate(String intro, String category, String nickname, String image) {
+        this.intro = intro;
+        this.category = category;
+        this.user.userChangeNicknameAndImage(nickname,image);
+>>>>>>> 3034a0ebd0719d27199555929a4aedb469650625
     }
 }
