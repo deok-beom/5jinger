@@ -8,6 +8,8 @@ import lombok.Getter;
 @Getter
 public class LookUpSellerResponseDto {
 
+    private final Long sellerId;
+
     private final String usename;
 
     private final String nickName;
@@ -17,9 +19,10 @@ public class LookUpSellerResponseDto {
     private UserRoleEnum role;
 
     public LookUpSellerResponseDto(Seller seller) {
+        this.sellerId = seller.getId();
         this.usename = seller.getUser().getUsername();
         this.nickName = seller.getUser().getNickname();
-        this.category = seller.getUser().getCatagory();
+        this.category = seller.getCategory();
         this.role = seller.getUser().getRole();
     }
 }

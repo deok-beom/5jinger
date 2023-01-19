@@ -27,6 +27,7 @@ public enum ErrorCode {
     REQUEST_IS_EXIST(NOT_FOUND,"요청이 완료된 상태입니다."),
     REQUEST_IS_NOT_EXIST(NOT_FOUND,"요청한 내역이 없습니다."),
     PAGINATION_IS_NOT_EXIST(NOT_FOUND,"요청하신 페이지 내역이 존재하지 않습니다."),
+    REQUEST_IS_ACCEPT(NOT_FOUND,"이미 수락한 요청입니다."),
 
 
 

@@ -4,6 +4,7 @@ import com.sparta.ojinger.dto.ElevationResponseDto;
 import com.sparta.ojinger.entity.Elevation;
 import com.sparta.ojinger.entity.ElevationStatus;
 import com.sparta.ojinger.repository.ElevationRepository;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
