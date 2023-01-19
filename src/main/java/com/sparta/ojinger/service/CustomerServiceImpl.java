@@ -127,11 +127,11 @@ public class CustomerServiceImpl implements CustomerService {
     //구매자 요청 수락
     @Transactional
     public void customerRequestAccept(Long requestId, User user) {
-        Optional<CustomerRequest> optionalCustomerRequest = customerRequestRepository.findByIdAndSellerUsername(requestId,user.getUsername());
-        if(optionalCustomerRequest.get().isStatus() == true) {
+        CustomerRequest customerRequest = customerRequestRepository.findById(requestId).orElseThrow(()-> new CustomException(ErrorCode.REQUEST_IS_NOT_EXIST));
+        Seller seller = sellerRepository.findByUser(user).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+        Optional<CustomerRequest> optionalCustomerRequest = customerRequestRepository.findByIdAndSellerUsername(requestId,seller.getUser().getUsername());        if(optionalCustomerRequest.get().isStatus() == true) {
             throw  new CustomException(ErrorCode.REQUEST_IS_ACCEPT);
         }
-        CustomerRequest customerRequest = customerRequestRepository.findById(requestId).orElseThrow(()-> new CustomException(ErrorCode.REQUEST_IS_NOT_EXIST));
         customerRequest.updateCustomerRequestStatus(true);
         customerRequestRepository.save(customerRequest);
     }
@@ -139,11 +139,12 @@ public class CustomerServiceImpl implements CustomerService {
     //구매자 요청 거절
     @Transactional
     public void customerRequestReject(Long requestId, User user) {
-        Optional<CustomerRequest> optionalCustomerRequest = customerRequestRepository.findByIdAndSellerUsername(requestId,user.getUsername());
+        CustomerRequest customerRequest = customerRequestRepository.findById(requestId).orElseThrow(()-> new CustomException(ErrorCode.REQUEST_IS_NOT_EXIST));
+        Seller seller = sellerRepository.findByUser(user).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+        Optional<CustomerRequest> optionalCustomerRequest = customerRequestRepository.findByIdAndSellerUsername(requestId,seller.getUser().getUsername());
         if(optionalCustomerRequest.get().isStatus() == true) {
             throw  new CustomException(ErrorCode.REQUEST_IS_ACCEPT);
         }
-        CustomerRequest customerRequest = customerRequestRepository.findById(requestId).orElseThrow(()-> new CustomException(ErrorCode.REQUEST_IS_NOT_EXIST));
         customerRequestRepository.delete(customerRequest);
     }
 
