@@ -115,7 +115,14 @@ public class SellerService {
         Seller seller = sellerRepository.findByUserId(id).orElseThrow(
                 () -> new CustomException(USER_NOT_FOUND)
         );
+        return seller;
+    }
 
+    @Transactional(readOnly = true)
+    public Seller getSellerById2(Long id) {
+        Seller seller = sellerRepository.findById(id).orElseThrow(
+                () -> new CustomException(USER_NOT_FOUND)
+        );
         return seller;
     }
 }

@@ -50,7 +50,7 @@ public class CustomerController {
     @PostMapping("/requests/items/{id}")
     public ResponseEntity<String> requestToCustomerAboutItem(@PathVariable Long id, @RequestBody RequestCustomerRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         ItemResponseDto item = itemService.getItemById(id);
-        Seller seller = sellerService.getSellerByUserId(item.getSellerId());
+        Seller seller = sellerService.getSellerById2(item.getSellerId());
         if (seller.getUser().getId() == userDetails.getUser().getId()) {
             throw new CustomException(ErrorCode.INVALID_CUSTOMER_REQUEST);
         }
