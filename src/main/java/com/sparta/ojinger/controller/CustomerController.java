@@ -39,13 +39,13 @@ public class CustomerController {
     // 전체 판매자 목록 조회
     @GetMapping("/sellers")
     public List<SellerProfileResponseDto> getSellers(@RequestParam int page) {
-        return sellerService.getSellers(pageableSetting(page));
+        return sellerService.getSellerProfiles(pageableSetting(page));
     }
 
     // 판매자 조회
     @GetMapping("/sellers/{id}")
     public SellerProfileResponseDto getSeller(@PathVariable Long id) {
-        return sellerService.getSellerProfileResponseDtoById(id);
+        return sellerService.getSellerProfileById(id);
     }
 
     // 나의 요청 모두 조회

@@ -7,12 +7,14 @@ import lombok.Getter;
 @Getter
 public class SellerResponseDto extends CustomerResponseDto {
     private final String intro;
-    //private final String category;
+    private final boolean available;
+    private final String category;
 
     public SellerResponseDto(Seller seller) {
         super(seller.getUser());
         super.role = UserRoleEnum.SELLER;
         this.intro = seller.getIntro();
-        //this.category = seller.getCategories();
+        this.available = seller.isAvailable();
+        this.category = seller.getCategoriesToString();
     }
 }

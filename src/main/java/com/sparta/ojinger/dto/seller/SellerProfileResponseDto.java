@@ -28,7 +28,7 @@ public class SellerProfileResponseDto {
         this.lastModifiedDate = seller.getModifiedAt();
         this.nickName = seller.getUser().getNickname();
         this.image = seller.getUser().getImage();
-        //this.category = seller.getCategory();
+        this.category = seller.getCategoriesToString();
         this.intro = seller.getIntro();
         this.role = seller.getUser().getRole();
     }

@@ -19,6 +19,7 @@ import static com.sparta.ojinger.exception.ErrorCode.*;
 public class OperatorService {
     private final SellerService sellerService;
     private final UserService userService;
+    private final ItemService itemService;
     private final PromotionRequestService promotionRequestService;
 
     @Transactional
@@ -43,6 +44,7 @@ public class OperatorService {
 
     @Transactional
     public void demoteSellerToCustomer(Long sellerId) {
+
         // ID를 이용해 사용자의 정보를 수정한다.
         User user;
         try {
@@ -53,7 +55,10 @@ public class OperatorService {
             throw new CustomException(IMPROPER_DEMOTION);
         }
 
-        // 사용자의 판매자 정보를 삭제한다.
-        sellerService.deleteSeller(user);
+        // 사용자의 판매자 정보를 비활성화 한다.
+        Seller seller = sellerService.unavailableSeller(user);
+
+        // 판매자의 모든 아이템을 판매 중지한다.
+        itemService.suspendAllSellersItem(seller);
     }
 }

@@ -5,25 +5,22 @@ import lombok.Getter;
 
 import javax.validation.constraints.Pattern;
 
+
 public class UserDto {
     @Getter
     public static class signUpRequestDto {
         @Pattern(regexp = "[a-z0-9]{4,10}", message = "최소 4자 이상, 10자 이하 알파벳 소문자(a~z), 숫자(0~9)를 혼합하여 입력해주세요.")
-        private final String username;
+        private String username;
         @Pattern(regexp = "[\\w0-9~!@#$%^&*()_+|<>?:{}]{8,15}", message = "최소 8자 이상, 15자 이하 알파벳 대소문자(a~z, A~Z), 숫자(0~9)를 혼합하여 입력해주세요.")
-        private final String password;
-        private final boolean admin;
-        private final String adminToken;
+        private String password;
+        private boolean admin;
+        private String adminToken;
 
         public signUpRequestDto(String username, String password, boolean admin, String adminToken) {
             this.username = username;
             this.password = password;
             this.admin = admin;
             this.adminToken = adminToken;
-        }
-
-        public signUpRequestDto(String username, String password) {
-            this(username, password, false, "");
         }
     }
 

@@ -45,14 +45,15 @@ public class ItemService {
     }
 
     @Transactional
-    public void addItem(ItemRequestDto requestDto, Seller seller) {
-        Item item = new Item(requestDto.getTitle(), requestDto.getCategory(), requestDto.getContent(), requestDto.getPrice());
+    public void addItem(ItemRequestDto requestDto, List<Category> categories, Seller seller) {
+        Item item = new Item(requestDto.getTitle(), requestDto.getContent(), requestDto.getPrice());
+        item.addCategory(categories);
         item.setSeller(seller);
         itemRepository.save(item);
     }
 
     @Transactional
-    public void updateItem(ItemRequestDto requestDto, Long itemId, Long userId) {
+    public void updateItem(ItemRequestDto requestDto, List<Category> categories, Long itemId, Long userId) {
         Item item = findItemAndValidUpdatable(itemId);
 
         // 얻어온 아이템이 현재 요청한 유저의 아이템인지 확인한다.
@@ -71,8 +72,9 @@ public class ItemService {
         }
 
         // 카테고리가 공백이 아니면 업데이트 해준다.
-        if (!requestDto.getCategory().trim().equals("")) {
-            //item.setCategory(requestDto.getCategory());
+        if (categories.size() != 0) {
+            item.getCategories().clear();
+            item.addCategory(categories);
         }
 
         // 가격이 0원이 아니면 업데이트 해준다.
@@ -110,5 +112,10 @@ public class ItemService {
         }
 
         return item;
+    }
+
+    @Transactional
+    public void suspendAllSellersItem(Seller seller) {
+        itemRepository.suspendAllItemBySeller(seller);
     }
 }

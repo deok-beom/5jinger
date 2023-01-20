@@ -31,7 +31,7 @@ public class OperatorController {
 
     @GetMapping("/sellers")
     public List<SellerResponseDto> getAllSellers(@RequestParam int page) {
-        return sellerService.getAllSellers(PageConfig.pageableSetting(page));
+        return sellerService.getSellersForOperator(PageConfig.pageableSetting(page));
     }
 
     @GetMapping("/promotions")

@@ -4,10 +4,12 @@ import com.sparta.ojinger.dto.seller.ItemRequestDto;
 import com.sparta.ojinger.dto.seller.SellerProfileRequestDto;
 import com.sparta.ojinger.dto.seller.SellerProfileResponseDto;
 import com.sparta.ojinger.dto.seller.RequestCustomerResponseDto;
+import com.sparta.ojinger.entity.Category;
 import com.sparta.ojinger.entity.Seller;
 import com.sparta.ojinger.exception.CustomException;
 import com.sparta.ojinger.exception.ErrorCode;
 import com.sparta.ojinger.security.UserDetailsImpl;
+import com.sparta.ojinger.service.CategoryService;
 import com.sparta.ojinger.service.CustomerRequestService;
 import com.sparta.ojinger.service.ItemService;
 import com.sparta.ojinger.service.SellerService;
@@ -28,11 +30,13 @@ public class SellerController {
 
     private final SellerService sellerService;
     private final ItemService itemService;
+    private final CategoryService categoryService;
     private final CustomerRequestService customerRequestService;
 
     @PatchMapping("/profile")
     public ResponseEntity updateMySellerProfile(@RequestBody SellerProfileRequestDto sellerProfileRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        sellerService.updateMySellerProfile(sellerProfileRequestDto, userDetails.getUser());
+        List<Category> categories = categoryService.getCategoryFromString(sellerProfileRequestDto.getCategory());
+        sellerService.updateMySellerProfile(sellerProfileRequestDto, categories, userDetails.getUser());
         return new ResponseEntity<>("프로필 설정이 완료 되었습니다. ", HttpStatus.OK);
     }
 
@@ -52,14 +56,16 @@ public class SellerController {
         // 현재 사용자의 판매자 정보를 불러온다.
         Seller seller = sellerService.getSellerByUserId(userDetails.getUser().getId());
 
-        itemService.addItem(requestDto, seller);
+        List<Category> categories = categoryService.getCategoryFromString(requestDto.getCategory());
+        itemService.addItem(requestDto, categories, seller);
         return new ResponseEntity<>("상품 등록이 완료되었습니다.", HttpStatus.CREATED);
     }
 
     // 나의 상품 수정
     @PatchMapping("/items/{id}/update")
     public ResponseEntity<String> updateItem(@RequestBody ItemRequestDto requestDto, @PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        itemService.updateItem(requestDto, id, userDetails.getUser().getId());
+        List<Category> categories = categoryService.getCategoryFromString(requestDto.getCategory());
+        itemService.updateItem(requestDto, categories, id, userDetails.getUser().getId());
         return new ResponseEntity<>("상품 정보 수정이 완료되었습니다.", HttpStatus.OK);
     }
 

@@ -25,7 +25,7 @@ public class ItemResponseDto {
         this.sellerNickName = item.getSeller().getUser().getNickname();
         this.title = item.getTitle();
         this.content = item.getContent();
-        this.category = item.getCategory();
+        this.category = item.getCategoriesToString();
         this.price = item.getPrice();
         this.status = item.getStatus();
         this.createdAt = item.getCreateAt();

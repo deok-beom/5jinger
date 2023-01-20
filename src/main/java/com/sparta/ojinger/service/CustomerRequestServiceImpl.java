@@ -49,7 +49,7 @@ public class CustomerRequestServiceImpl implements CustomerRequestService {
 
     @Transactional
     public void cancelCustomerRequest(Long requestId, User user) {
-        // 해당 아이템에 현재 사용자가 요청한 내역이 있는지 확인한다.
+        // 요청한 내역이 있는지 확인한다.
         Optional<CustomerRequest> optionalCustomerRequest = customerRequestRepository.findById(requestId);
         if (optionalCustomerRequest.isEmpty()) {
             throw new CustomException(ErrorCode.REQUEST_IS_NOT_EXIST);

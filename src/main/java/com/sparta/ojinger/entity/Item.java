@@ -27,10 +27,6 @@ public class Item extends Timestamped {
 
     @Setter
     @Column(nullable = false)
-    private String category;
-
-    @Setter
-    @Column(nullable = false)
     private Long price;
 
     @Setter
@@ -46,10 +42,9 @@ public class Item extends Timestamped {
     @OneToMany(fetch = FetchType.LAZY)
     private List<Category> categories;
 
-    public Item(String title, String content, String category, Long price) {
+    public Item(String title, String content, Long price) {
         this.title = title;
         this.content = content;
-        this.category = category;
         this.price = price;
         this.status = TradeStatus.ON_SALE;
         this.categories = new ArrayList<>();
@@ -59,7 +54,7 @@ public class Item extends Timestamped {
         CategoriesMethod.addCategories(this.categories, categories);
     }
 
-    public String getCategories() {
+    public String getCategoriesToString() {
         return CategoriesMethod.categoriesToString(this.categories);
     }
 }
