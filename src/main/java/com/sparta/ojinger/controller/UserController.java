@@ -15,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 
 @RestController
@@ -26,8 +27,8 @@ public class UserController {
     private final JwtUtil jwtUtil;
 
     // 회원가입
-    @PostMapping("/signUp")
-    public ResponseEntity<String> signUp(@RequestBody @Validated UserDto.signUpRequestDto requestDto, BindingResult bindingResult) {
+    @PostMapping("/signup")
+    public ResponseEntity<String> signUp(@Valid @RequestBody UserDto.signUpRequestDto requestDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bindingResult.getAllErrors().toString());
         }
@@ -37,7 +38,7 @@ public class UserController {
     }
 
     // 로그인
-    @PostMapping("/logIn")
+    @PostMapping("/login")
     public ResponseEntity<String> logIn(@RequestBody UserDto.logInRequestDto requestDto, HttpServletResponse response) {
         UserDto.logInResponseDto user = userService.logIn(requestDto.getUsername(), requestDto.getPassword());
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getUsername(), user.getRole()));
