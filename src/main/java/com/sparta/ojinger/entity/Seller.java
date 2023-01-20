@@ -16,7 +16,6 @@ public class Seller extends Timestamped{
 
     @MapsId
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
     private User user;
 
     @Setter

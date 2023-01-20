@@ -1,13 +1,10 @@
 package com.sparta.ojinger.entity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CategoriesMethod {
     public static void addCategories(List<Category> fieldCategories, List<Category> inputCategories) {
-        for (Category category : inputCategories) {
-            fieldCategories.add(category);
-        }
+        fieldCategories.addAll(inputCategories);
     }
 
     public static String categoriesToString(List<Category> fieldCategories) {

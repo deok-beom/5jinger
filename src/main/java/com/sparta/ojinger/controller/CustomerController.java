@@ -62,14 +62,14 @@ public class CustomerController {
     // 아이템에 대한 요청 작성
     @PostMapping("/items/{id}/request")
     public ResponseEntity<String> requestAboutItem(@PathVariable Long id, @RequestBody RequestCustomerRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        // 전달 받은 아이템 ID를 이용해 Item을 찾는다.
+        // 전달 받은 아이템 ID를 이용해 아이템을 찾는다.
         ItemResponseDto item = itemService.getItemById(id);
 
-//        // 찾은 Item에서 판매자 정보를 찾는다.
+//        // 찾은 아이템에서 판매자 정보를 찾는다.
         Seller seller = sellerService.getSellerByUserId(item.getSellerId());
 //
 //        // 찾은 판매자 정보와 현재 요청을 보낸 사용자가 동일하면 예외 발생 (내가 등록한 상품에 내가 요청할 수 없음)
-        if (seller.getUser().getId() == userDetails.getUser().getId()) {
+        if (seller.getUser().getId().equals(userDetails.getUser().getId())) {
             throw new CustomException(ErrorCode.INVALID_CUSTOMER_REQUEST);
         }
 
@@ -87,7 +87,7 @@ public class CustomerController {
     }
 
     // 아이템에 대한 요청 취소
-    @PatchMapping("/items/{id}/request")
+    @PatchMapping("/items/requests/{id}")
     public ResponseEntity<String> requestCancelAboutItem(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         customerService.cancelCustomerRequest(id, userDetails.getUser());
         return new ResponseEntity<>("요청 취소", HttpStatus.OK);

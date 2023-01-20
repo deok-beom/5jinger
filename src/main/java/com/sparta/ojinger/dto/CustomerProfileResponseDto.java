@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Getter
 public class CustomerProfileResponseDto {
     private final Long userId;
-    private String username;
+    private final String username;
     private final String nickname;
     private final String image;
     private final LocalDateTime signUpDate;

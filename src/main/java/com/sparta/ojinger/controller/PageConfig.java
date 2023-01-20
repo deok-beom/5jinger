@@ -16,7 +16,6 @@ public class PageConfig {
 
         Sort.Direction direction = Sort.Direction.DESC;
         Sort sort = Sort.by(direction, "id");
-        Pageable pageable = PageRequest.of(pageChoice - 1, 10, sort);
-        return pageable;
+        return PageRequest.of(pageChoice - 1, 10, sort);
     }
 }

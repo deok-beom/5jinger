@@ -17,7 +17,6 @@ public class PromotionRequest {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
     private User user;
 
     @Column
@@ -28,10 +27,6 @@ public class PromotionRequest {
     @CreatedDate
     private LocalDateTime requestDate;
 
-//    public void updateStatus(ElevationStatus status) {
-//        this.status = status;
-//    }
-//
     public PromotionRequest(User user, ProcessStatus status) {
         this.user = user;
         this.status = status;

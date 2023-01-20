@@ -15,19 +15,18 @@ public class CustomerRequest {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "request_id")
     private Long id;
 
     @Column(nullable = false)
     private String message;
 
-    @Column(name = "user_id", nullable = false)
+    @Column(nullable = false)
     private Long userId;
 
-    @Column(name = "item_id", nullable = false)
+    @Column(nullable = false)
     private Long itemId;
 
-    @Column(name = "seller_id", nullable = false)
+    @Column(nullable = false)
     private Long sellerId;
 
     @Column

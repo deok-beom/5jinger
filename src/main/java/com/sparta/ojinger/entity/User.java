@@ -26,24 +26,20 @@ public class User extends Timestamped {
     @Setter
     private UserRoleEnum role;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     @Setter
     private String nickname;
 
-    @Column(nullable = true)
+    @Column
     @Setter
     private String image;
 
     public User(String username, String password, UserRoleEnum role){
         this.username = username;
         this.password = password;
+        this.nickname = this.username;
+        this.image = "기본 이미지";
         this.role = role;
-    }
-
-
-    public void updateUserProfile(String nickname, String image) {
-        this.nickname = nickname;
-        this.image = image;
     }
 }
 

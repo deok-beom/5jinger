@@ -120,17 +120,8 @@ public class SellerService {
 
     @Transactional(readOnly = true)
     public Seller getSellerByUserId(Long id) {
-        Seller seller = sellerRepository.findByUserIdAndAvailableTrue(id).orElseThrow(
+        return sellerRepository.findByUserIdAndAvailableTrue(id).orElseThrow(
                 () -> new CustomException(USER_NOT_FOUND)
         );
-        return seller;
-    }
-
-    @Transactional(readOnly = true)
-    public Seller getSellerById2(Long id) {
-        Seller seller = sellerRepository.findById(id).orElseThrow(
-                () -> new CustomException(USER_NOT_FOUND)
-        );
-        return seller;
     }
 }

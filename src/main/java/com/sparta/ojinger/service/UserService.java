@@ -69,7 +69,12 @@ public class UserService {
         User user = getUserByName(username);
 
         if (!requestDto.getNickname().trim().equals("")) {
-            user.setNickname(requestDto.getNickname());
+
+            if (userRepository.countByNickname(requestDto.getNickname()) > 0) {
+                throw new CustomException(DUPLICATE_NICKNAME);
+            } else {
+                user.setNickname(requestDto.getNickname());
+            }
         }
 
         if (!requestDto.getImage().trim().equals("")) {

@@ -4,5 +4,9 @@ import lombok.Getter;
 
 @Getter
 public class RequestCustomerRequestDto {
-    private String message;
+    private final String message;
+
+    public RequestCustomerRequestDto(String message) {
+        this.message = message;
+    }
 }

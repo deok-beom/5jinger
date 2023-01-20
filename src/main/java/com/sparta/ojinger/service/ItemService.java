@@ -56,7 +56,7 @@ public class ItemService {
         Item item = findItemAndValidUpdatable(itemId);
 
         // 얻어온 아이템이 현재 요청한 유저의 아이템인지 확인한다.
-        if (item.getSeller().getId() != userId) {
+        if (!item.getSeller().getId().equals(userId)) {
             throw new CustomException(ErrorCode.INVALID_AUTH_TOKEN);
         }
 
@@ -89,7 +89,7 @@ public class ItemService {
         Item item = findItemAndValidUpdatable(itemId);
 
         // 삭제하려는 아이템을 등록한 사람이 현재 사용자 자신이거나, 현재 사용자의 권한이 관리자라면 삭제를 수행한다.
-        if (item.getSeller().getId() == user.getId() || user.getRole().equals(UserRoleEnum.ADMIN)) {
+        if (item.getSeller().getId().equals(user.getId()) || user.getRole().equals(UserRoleEnum.ADMIN)) {
             item.setStatus(TradeStatus.SUSPENSION);
         } else {
             throw new CustomException(ErrorCode.INVALID_AUTH_TOKEN);

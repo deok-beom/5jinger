@@ -34,7 +34,7 @@ public class SellerController {
     private final CustomerRequestService customerRequestService;
 
     @PatchMapping("/profile")
-    public ResponseEntity updateMySellerProfile(@RequestBody SellerProfileRequestDto sellerProfileRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<String> updateMySellerProfile(@RequestBody SellerProfileRequestDto sellerProfileRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<Category> categories = categoryService.getCategoryFromString(sellerProfileRequestDto.getCategory());
         sellerService.updateMySellerProfile(sellerProfileRequestDto, categories, userDetails.getUser());
         return new ResponseEntity<>("프로필 설정이 완료 되었습니다. ", HttpStatus.OK);

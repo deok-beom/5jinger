@@ -13,20 +13,20 @@ public class SellerProfileResponseDto {
     private final LocalDateTime promotedAt;
     private final LocalDateTime lastModifiedDate;
 
-    private final String nickName;
+    private final String nickname;
 
     private final String image;
 
-    private String category;
+    private final String category;
     private final String intro;
 
-    private UserRoleEnum role;
+    private final UserRoleEnum role;
 
     public SellerProfileResponseDto(Seller seller) {
         this.sellerId = seller.getId();
         this.promotedAt = seller.getCreateAt();
         this.lastModifiedDate = seller.getModifiedAt();
-        this.nickName = seller.getUser().getNickname();
+        this.nickname = seller.getUser().getNickname();
         this.image = seller.getUser().getImage();
         this.category = seller.getCategoriesToString();
         this.intro = seller.getIntro();

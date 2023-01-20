@@ -7,8 +7,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-
 public interface ItemRepository extends JpaRepository<Item, Long> {
     @Modifying
     @Query("update Item i set i.status = 'SUSPENSION' WHERE i.seller = :seller")

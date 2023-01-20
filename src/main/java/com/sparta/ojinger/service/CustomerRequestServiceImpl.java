@@ -8,7 +8,6 @@ import com.sparta.ojinger.exception.CustomException;
 import com.sparta.ojinger.exception.ErrorCode;
 import com.sparta.ojinger.repository.CustomerRequestRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.jni.Proc;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -57,7 +56,7 @@ public class CustomerRequestServiceImpl implements CustomerRequestService {
 
         CustomerRequest request = optionalCustomerRequest.get();
         // 요청을 한 사람이 현재 사용자가 맞는지 검증한다.
-        if (request.getUserId() != user.getId()) {
+        if (!request.getUserId().equals(user.getId())) {
             throw new CustomException(ErrorCode.INVALID_AUTH_TOKEN);
         }
 
@@ -103,7 +102,7 @@ public class CustomerRequestServiceImpl implements CustomerRequestService {
     private CustomerRequest validRequests(Long requestId, Long userId) {
         CustomerRequest customerRequest = customerRequestRepository.findById(requestId).orElseThrow(() -> new CustomException(ErrorCode.REQUEST_IS_NOT_EXIST));
         // 요청 대상 판매자가 현재 로그인한 사용자가 맞는지 확인한다.
-        if (customerRequest.getSellerId() != userId) {
+        if (!customerRequest.getSellerId().equals(userId)) {
             throw new CustomException(ErrorCode.INVALID_AUTH_TOKEN);
         }
 

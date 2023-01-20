@@ -7,8 +7,8 @@ import java.util.Objects;
 @Getter
 public class CustomerProfileRequestDto {
 
-    private String nickname;
-    private String image;
+    private final String nickname;
+    private final String image;
 
     public CustomerProfileRequestDto(String nickname, String image) {
         this.nickname = Objects.requireNonNullElse(nickname, "");

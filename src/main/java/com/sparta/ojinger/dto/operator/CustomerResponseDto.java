@@ -12,9 +12,9 @@ public class CustomerResponseDto {
     private final LocalDateTime signUpDate;
     private final LocalDateTime lastModifiedDate;
     private final String username;
-    protected UserRoleEnum role;
     private final String nickname;
     private final String image;
+    protected UserRoleEnum role;
 
 
     public CustomerResponseDto(User user) {
@@ -22,8 +22,8 @@ public class CustomerResponseDto {
         this.signUpDate = user.getCreateAt();
         this.lastModifiedDate = user.getModifiedAt();
         this.username = user.getUsername();
-        this.role = user.getRole();
         this.nickname = user.getNickname();
         this.image = user.getImage();
+        this.role = user.getRole();
     }
 }

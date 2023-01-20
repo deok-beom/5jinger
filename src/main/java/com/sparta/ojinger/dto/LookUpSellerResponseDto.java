@@ -13,15 +13,15 @@ public class LookUpSellerResponseDto {
 
     private final String nickName;
 
-    private String category;
+    private final String category;
 
-    private UserRoleEnum role;
+    private final UserRoleEnum role;
 
     public LookUpSellerResponseDto(Seller seller) {
         this.sellerId = seller.getId();
         this.username = seller.getUser().getUsername();
         this.nickName = seller.getUser().getNickname();
-        //this.category = seller.getCategory();
+        this.category = seller.getCategoriesToString();
         this.role = seller.getUser().getRole();
     }
 }
