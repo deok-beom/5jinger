@@ -9,10 +9,7 @@ import com.sparta.ojinger.entity.Seller;
 import com.sparta.ojinger.exception.CustomException;
 import com.sparta.ojinger.exception.ErrorCode;
 import com.sparta.ojinger.security.UserDetailsImpl;
-import com.sparta.ojinger.service.CategoryService;
-import com.sparta.ojinger.service.CustomerRequestService;
-import com.sparta.ojinger.service.ItemService;
-import com.sparta.ojinger.service.SellerService;
+import com.sparta.ojinger.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +29,7 @@ public class SellerController {
     private final ItemService itemService;
     private final CategoryService categoryService;
     private final CustomerRequestService customerRequestService;
+    private final ConvenienceService convenienceService;
 
     @PatchMapping("/profile")
     public ResponseEntity<String> updateMySellerProfile(@RequestBody SellerProfileRequestDto sellerProfileRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -72,7 +70,7 @@ public class SellerController {
     // 나의 상품 판매 중지
     @PatchMapping("/items/{id}/suspend")
     public ResponseEntity<String> suspendItem(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        itemService.suspendItem(id, userDetails.getUser());
+        convenienceService.suspendItem(id, userDetails.getUser());
         return new ResponseEntity<>("상품 삭제가 완료되었습니다.", HttpStatus.OK);
     }
 

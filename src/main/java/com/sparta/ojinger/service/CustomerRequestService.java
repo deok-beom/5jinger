@@ -22,4 +22,7 @@ public interface CustomerRequestService {
     void approveCustomerRequest(Long requestId, Long userId);
 
     void rejectCustomerRequest(Long requestId, Long userId);
+
+    void canceledAllRequestsToSeller(Long sellerId);
+    void canceledAllRequestsAboutItem(Long itemId);
 }

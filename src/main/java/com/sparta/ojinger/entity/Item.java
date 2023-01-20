@@ -39,7 +39,7 @@ public class Item extends Timestamped {
     @Enumerated(EnumType.STRING)
     private TradeStatus status;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<Category> categories;
 
     public Item(String title, String content, Long price) {

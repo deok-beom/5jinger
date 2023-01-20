@@ -16,11 +16,12 @@ import static com.sparta.ojinger.exception.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
-public class OperatorService {
+public class ConvenienceService {
     private final SellerService sellerService;
     private final UserService userService;
     private final ItemService itemService;
     private final PromotionRequestService promotionRequestService;
+    private final CustomerRequestService customRequestService;
 
     @Transactional
     public void promoteCustomerToSeller(Long requestId) {
@@ -60,5 +61,17 @@ public class OperatorService {
 
         // 판매자의 모든 아이템을 판매 중지한다.
         itemService.suspendAllSellersItem(seller);
+
+        // 판매자의 모든 아이템에 대한 요청들을 취소시킨다.
+        customRequestService.canceledAllRequestsToSeller(sellerId);
+    }
+
+    @Transactional
+    public void suspendItem(Long itemId, User user) {
+        // 아이템을 판매 중지한다.
+        itemService.suspendItem(itemId, user);
+
+        // 해당 아이템에 대한 요청들을 취소한다.
+        customRequestService.canceledAllRequestsAboutItem(itemId);
     }
 }

@@ -45,7 +45,7 @@ public class SellerService {
 
     @Transactional(readOnly = true)
     public SellerProfileResponseDto getSellerProfileById(Long id) {
-        Seller seller = sellerRepository.findByUserIdAndAvailableTrue(id).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        Seller seller = sellerRepository.findByIdAndAvailableTrue(id).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         return new SellerProfileResponseDto(seller);
     }
 
@@ -120,7 +120,7 @@ public class SellerService {
 
     @Transactional(readOnly = true)
     public Seller getSellerByUserId(Long id) {
-        return sellerRepository.findByUserIdAndAvailableTrue(id).orElseThrow(
+        return sellerRepository.findByIdAndAvailableTrue(id).orElseThrow(
                 () -> new CustomException(USER_NOT_FOUND)
         );
     }

@@ -5,7 +5,7 @@ import com.sparta.ojinger.dto.PromotionRequestResponseDto;
 import com.sparta.ojinger.dto.operator.SellerResponseDto;
 import com.sparta.ojinger.entity.ProcessStatus;
 import com.sparta.ojinger.service.PromotionRequestService;
-import com.sparta.ojinger.service.OperatorService;
+import com.sparta.ojinger.service.ConvenienceService;
 import com.sparta.ojinger.service.SellerService;
 import com.sparta.ojinger.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class OperatorController {
     private final UserService userService;
     private final SellerService sellerService;
     private final PromotionRequestService promotionRequestService;
-    private final OperatorService operatorService;
+    private final ConvenienceService convenienceService;
 
     @GetMapping("/customers")
     public List<CustomerResponseDto> getAllCustomers(@RequestParam int page) {
@@ -41,7 +41,7 @@ public class OperatorController {
 
     @PostMapping("/promotions/{id}")
     public ResponseEntity<String> approvePromotionRequest(@PathVariable Long id) {
-        operatorService.promoteCustomerToSeller(id);
+        convenienceService.promoteCustomerToSeller(id);
         return new ResponseEntity<>("등업을 승인하고 등업 처리하였습니다.", HttpStatus.OK);
     }
 
@@ -53,7 +53,7 @@ public class OperatorController {
 
     @PatchMapping("/seller/{id}")
     public ResponseEntity<String> demoteSellerToCustomer(@PathVariable Long id) {
-        operatorService.demoteSellerToCustomer(id);
+        convenienceService.demoteSellerToCustomer(id);
         return new ResponseEntity<>("회원 등급을 강등 하였습니다.", HttpStatus.OK);
     }
 }

@@ -65,11 +65,11 @@ public class CustomerController {
         // 전달 받은 아이템 ID를 이용해 아이템을 찾는다.
         ItemResponseDto item = itemService.getItemById(id);
 
-//        // 찾은 아이템에서 판매자 정보를 찾는다.
+        // 찾은 아이템에서 판매자 정보를 찾는다.
         Seller seller = sellerService.getSellerByUserId(item.getSellerId());
-//
-//        // 찾은 판매자 정보와 현재 요청을 보낸 사용자가 동일하면 예외 발생 (내가 등록한 상품에 내가 요청할 수 없음)
-        if (seller.getUser().getId().equals(userDetails.getUser().getId())) {
+
+        // 찾은 판매자 정보와 현재 요청을 보낸 사용자가 동일하면 예외 발생 (내가 등록한 상품에 내가 요청할 수 없음)
+        if (seller.getId().equals(userDetails.getUser().getId())) {
             throw new CustomException(ErrorCode.INVALID_CUSTOMER_REQUEST);
         }
 

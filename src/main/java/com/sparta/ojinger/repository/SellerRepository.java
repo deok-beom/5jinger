@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface SellerRepository extends JpaRepository<Seller, Long> {
     Optional<Seller> findByUser(User user);
     Optional<Seller> findByUserAndAvailableTrue(User user);
-    Optional<Seller> findByUserIdAndAvailableTrue(Long id);
+    Optional<Seller> findByIdAndAvailableTrue(Long id);
     Page<Seller> findAllByAvailableTrue(Pageable pageable);
 
 

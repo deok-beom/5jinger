@@ -99,6 +99,16 @@ public class CustomerRequestServiceImpl implements CustomerRequestService {
         customerRequestRepository.save(customerRequest);
     }
 
+    @Transactional
+    public void canceledAllRequestsToSeller(Long sellerId) {
+        customerRequestRepository.canceledAllRequestsToSeller(sellerId);
+    }
+
+    @Transactional
+    public void canceledAllRequestsAboutItem(Long itemId) {
+        customerRequestRepository.canceledAllRequestsAboutItem(itemId);
+    }
+
     private CustomerRequest validRequests(Long requestId, Long userId) {
         CustomerRequest customerRequest = customerRequestRepository.findById(requestId).orElseThrow(() -> new CustomException(ErrorCode.REQUEST_IS_NOT_EXIST));
         // 요청 대상 판매자가 현재 로그인한 사용자가 맞는지 확인한다.
