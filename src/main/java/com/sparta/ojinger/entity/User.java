@@ -26,7 +26,7 @@ public class User extends Timestamped {
     @Setter
     private UserRoleEnum role;
 
-    @Column(nullable = true)
+    @Column(nullable = true,unique = true)
     @Setter
     private String nickname;
 

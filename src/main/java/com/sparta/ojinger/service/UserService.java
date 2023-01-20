@@ -68,6 +68,11 @@ public class UserService {
     public void updateMyProfile(CustomerProfileRequestDto requestDto, String username) {
         User user = getUserByName(username);
 
+        Optional<User> checkResult = userRepository.findByNickname(requestDto.getNickname());
+       if(checkResult.isPresent()) {
+           throw new CustomException(DUPLICATE_NICKNAME);
+       }
+
         if (!requestDto.getNickname().trim().equals("")) {
             user.setNickname(requestDto.getNickname());
         }

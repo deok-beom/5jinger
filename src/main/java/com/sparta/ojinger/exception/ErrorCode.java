@@ -42,6 +42,7 @@ public enum ErrorCode {
 
     //409 CONFLICT 중복된 리소스
     DUPLICATE_USERNAME(CONFLICT, "중복된 username 입니다."),
+    DUPLICATE_NICKNAME(CONFLICT, "중복된 nickname 입니다."),
     DUPLICATE_SELLER(CONFLICT, "이미 판매자 데이터가 존재합니다."),
 
     //500
