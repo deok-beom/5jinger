@@ -31,6 +31,7 @@ public class Item extends Timestamped {
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seller_id")
     private Seller seller;
 
     @Setter
