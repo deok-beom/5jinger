@@ -47,9 +47,9 @@ public class SecurityConfig {
         // 기본 설정인 Session 방식은 사용하지 않고 JWT 방식을 사용하기 위한 설정
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http.authorizeRequests().antMatchers("/users/signUp").permitAll()
+        http.authorizeRequests().antMatchers("/users/signup").permitAll()
                 .antMatchers("/items/**").permitAll()
-                .antMatchers("/users/logIn").permitAll()
+                .antMatchers("/users/login").permitAll()
                 .antMatchers("/operators/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/sellers/items/**").hasAnyRole("ADMIN", "SELLER")
 //                .antMatchers("/sellers/**").hasRole("SELLER")

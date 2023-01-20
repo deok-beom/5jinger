@@ -12,19 +12,11 @@ public class UserDto {
     @NoArgsConstructor
     public static class signUpRequestDto {
         @Pattern(regexp = "[a-z0-9]{4,10}", message = "최소 4자 이상, 10자 이하 알파벳 소문자(a~z), 숫자(0~9)를 혼합하여 입력해주세요.")
-<<<<<<< HEAD
         private String username;
         @Pattern(regexp = "[\\w0-9~!@#$%^&*()_+|<>?:{}]{8,15}", message = "최소 8자 이상, 15자 이하 알파벳 대소문자(a~z, A~Z), 숫자(0~9)를 혼합하여 입력해주세요.")
         private String password;
         private boolean admin;
         private String adminToken;
-=======
-        private  String username;
-        @Pattern(regexp = "[\\w0-9~!@#$%^&*()_+|<>?:{}]{8,15}", message = "최소 8자 이상, 15자 이하 알파벳 대소문자(a~z, A~Z), 숫자(0~9)를 혼합하여 입력해주세요.")
-        private  String password;
-        private  boolean admin;
-        private  String adminToken;
->>>>>>> 9567fdc0cf6fc2ed34a6f1b05c9d469202ea2713
 
         public signUpRequestDto(String username, String password, boolean admin, String adminToken) {
             this.username = username;
